@@ -13,15 +13,13 @@ const Location = () => {
 
   return (
     <div className="Location">
-      <FormGroup label="Longitude" inline>
+      <FormGroup label="Longitude" inline className="form-group">
         <NumericInput value={lng} onValueChange={setLng} min={-180} max={+180} />
       </FormGroup>
-      <FormGroup label="Latitude" inline>
+      <FormGroup label="Latitude" inline className="form-group">
         <NumericInput value={lat} onValueChange={setLat} min={-90} max={+90} />
       </FormGroup>
-      <Button onClick={handleSubmit} small>
-        submit
-      </Button>
+      <Button onClick={handleSubmit}>SUBMIT</Button>
     </div>
   );
 };

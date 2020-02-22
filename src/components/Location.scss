@@ -1,2 +1,13 @@
 .Location {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  > * {
+    margin-right: 1rem !important;
+  }
 }

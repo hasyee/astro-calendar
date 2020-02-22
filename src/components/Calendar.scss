@@ -1,0 +1,54 @@
+.Calendar {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+
+  .Calendar-header {
+    flex: 0 0 auto;
+    height: 50px;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+  }
+
+  .date-controls {
+    display: flex;
+    align-items: center;
+    > * {
+      margin-left: 1rem;
+    }
+  }
+
+  .Calendar-grid {
+    flex: 1 1 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .Calendar-grid-item {
+    flex: 0 14.28571%;
+    text-align: center;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .Calendar-grid-item.nextMonth,
+  .Calendar-grid-item.prevMonth {
+    color: #999;
+  }
+
+  .Calendar-grid-item:nth-child(7n + 1) {
+    border-left: 1px solid #ddd;
+  }
+
+  .Calendar-grid-item:nth-child(-n + 7) {
+    border-top: 1px solid #ddd;
+  }
+}

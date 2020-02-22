@@ -1,11 +1,11 @@
 import React from 'react';
-import Location from './Location';
+import Calendar from './Calendar';
 import './App.scss';
 
 const App = () => {
   return (
     <div className="App">
-      <Location />
+      <Calendar date={new Date()} />
     </div>
   );
 };
