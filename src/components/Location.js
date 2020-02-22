@@ -10,11 +10,11 @@ export default React.memo(() => {
 
   return (
     <div className="Location">
-      <FormGroup label="Longitude" inline className="form-group">
-        <NumericInput value={lng} onValueChange={setLng} min={-180} max={+180} />
-      </FormGroup>
-      <FormGroup label="Latitude" inline className="form-group">
+      <FormGroup label="Lat" inline className="form-group">
         <NumericInput value={lat} onValueChange={setLat} min={-90} max={+90} />
+      </FormGroup>
+      <FormGroup label="Lng" inline className="form-group">
+        <NumericInput value={lng} onValueChange={setLng} min={-180} max={+180} />
       </FormGroup>
       <Button onClick={() => setLocation([lng, lat])}>SUBMIT</Button>
     </div>
