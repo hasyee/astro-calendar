@@ -1,19 +1,17 @@
 import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { Calendar } from 'react-calendar-component';
 import { Button } from '@blueprintjs/core';
 import moment from 'moment';
-import { getDate, useActions } from '../store';
+import { useDate } from '../store';
 import Location from './Location';
 import './Calendar.scss';
 
 export default () => {
-  const date = useSelector(getDate);
-  const { setDate } = useActions();
+  const [date, setDate] = useDate();
 
-  const handleMonthChange = useCallback(date => setDate(date.valueOf()));
-  const handleDatePick = useCallback(date => console.log(date));
-  const handleSetToday = useCallback(() => setDate(Date.now()));
+  const handleMonthChange = useCallback(date => setDate(date.valueOf()), [setDate]);
+  const handleDatePick = useCallback(date => console.log(date), []);
+  const handleSetToday = useCallback(() => setDate(Date.now()), [setDate]);
 
   return (
     <Calendar
