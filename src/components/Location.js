@@ -9,7 +9,7 @@ const Location = () => {
   const { setLocation } = useActions();
   const [lng, setLng] = useState(location[0]);
   const [lat, setLat] = useState(location[1]);
-  const handleSubmit = useCallback(() => setLocation([lng, lat]), [lng, lat]);
+  const handleSubmit = useCallback(() => setLocation([lng, lat]), [setLocation, lng, lat]);
 
   return (
     <div className="Location">

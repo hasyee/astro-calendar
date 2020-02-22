@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import Store from 'repatch';
 import { bindActionCreators } from 'redux';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as actions from './actions';
 export * from './selectors';
 
