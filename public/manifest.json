@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Astro Calendar",
+  "name": "Astro Calendar",
   "icons": [],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#30404D",
+  "background_color": "#30404D"
 }
