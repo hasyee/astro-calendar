@@ -11,8 +11,7 @@ const store = new Store({
   date: moment()
     .startOf('day')
     .valueOf(),
-  location: [19, 47],
-  cache: {}
+  location: [19, 47]
 });
 
 window.store = store;
