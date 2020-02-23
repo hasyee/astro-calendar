@@ -8,7 +8,8 @@ export * from './selectors';
 
 const store = new Store({
   date: Date.now(),
-  location: [19, 47]
+  location: [19, 47],
+  cache: {}
 });
 
 window.store = store;
