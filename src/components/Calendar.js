@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector, getDays } from '../store';
 import CalendarItem from './CalendarItem';
 import './Calendar.scss';
