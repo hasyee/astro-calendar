@@ -1,20 +1,21 @@
 import React, { useCallback } from 'react';
-import { Calendar } from 'react-calendar-component';
+import { Calendar as CalendarComponent } from 'react-calendar-component';
 import { Button } from '@blueprintjs/core';
 import moment from 'moment';
-import { useDate } from '../store';
+import { useSelector, useActions, getDate } from '../store';
 import Location from './Location';
 import './Calendar.scss';
 
-export default React.memo(() => {
-  const [date, setDate] = useDate();
+export default React.memo(function Calendar() {
+  const date = useSelector(getDate);
+  const { setDate } = useActions();
 
   const handleMonthChange = useCallback(date => setDate(date.valueOf()), [setDate]);
   const handleDatePick = useCallback(date => console.log(date), []);
   const handleSetToday = useCallback(() => setDate(Date.now()), [setDate]);
 
   return (
-    <Calendar
+    <CalendarComponent
       date={moment(date)}
       onChangeMonth={handleMonthChange}
       onPickDate={handleDatePick}

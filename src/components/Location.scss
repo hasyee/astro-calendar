@@ -3,11 +3,17 @@
   display: flex;
   align-items: center;
 
+  .input {
+    input {
+      width: 100px;
+    }
+  }
+
   .form-group {
     margin-bottom: 0;
   }
 
-  > * {
-    margin-right: 1rem !important;
+  > *:not(:last-child) {
+    margin-right: .5rem !important;
   }
 }
