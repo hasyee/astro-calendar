@@ -33,16 +33,12 @@ $border: rgba(16, 22, 26, 0.4);
     justify-content: space-between;
 
     .day {
+      width: 60%;
       align-self: center;
-      .day-number {
-      }
-
-      .day-name {
-      }
     }
 
     .moon-container {
-      flex: 1 1 0;
+      width: 40%;
       display: flex;
       flex-direction: column;
       > * {
