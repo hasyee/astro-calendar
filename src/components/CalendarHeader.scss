@@ -1,0 +1,22 @@
+.CalendarHeader {
+  flex: 0 0 auto;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  .action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+
+    .date-controls {
+      display: flex;
+      align-items: center;
+      > *:not(:first-child) {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
