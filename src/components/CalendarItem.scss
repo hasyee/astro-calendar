@@ -1,11 +1,13 @@
 $border: rgba(255, 255, 255, 0.5);
 
-.cell {
+.CalendarItem {
   flex: 0 14.28571%;
   display: flex;
   flex-direction: column;
   border-right: 1px solid $border;
   border-bottom: 1px solid $border;
+  text-align: center;
+
   &:nth-child(7n) {
     border-right: 0;
   }
@@ -13,23 +15,6 @@ $border: rgba(255, 255, 255, 0.5);
   &:nth-child(-n + 7) {
     border-top: 1px solid $border;
   }
-  > * {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    > * {
-      flex: 1 1 0;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-}
-
-.CalendarItem {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
 
   &.nextMonth,
   &.prevMonth {

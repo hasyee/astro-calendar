@@ -22,7 +22,15 @@ export default React.memo(function Header() {
   );
   const handlePrevMonth = useCallback(() => updateMonth(-1), [updateMonth]);
   const handleNextMonth = useCallback(() => updateMonth(+1), [updateMonth]);
-  const handleThisMonth = useCallback(() => setDate(Date.now()), [setDate]);
+  const handleThisMonth = useCallback(
+    () =>
+      setDate(
+        moment()
+          .startOf('day')
+          .valueOf()
+      ),
+    [setDate]
+  );
 
   return (
     <div className="Header">
