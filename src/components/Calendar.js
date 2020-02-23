@@ -28,15 +28,21 @@ export default React.memo(function Calendar() {
       renderHeader={({ date, onPrevMonth, onNextMonth }) => (
         <div className="Calendar-header">
           <div className="action-bar">
-            <Button icon="locate" onClick={handleOpenLocationDialog}>
+            <Button icon="locate" onClick={handleOpenLocationDialog} large>
               Location
             </Button>
             <Location isOpen={isOpenLocationDialog} onClose={handleCloseLocationDialog} />
             <div className="date-controls">
               <div className="Calendar-header-currentDate">{date.format('MMMM YYYY')}</div>
-              <Button onClick={onPrevMonth}>«</Button>
-              <Button onClick={handleSetToday}>•</Button>
-              <Button onClick={onNextMonth}>»</Button>
+              <Button onClick={onPrevMonth} large>
+                «
+              </Button>
+              <Button onClick={handleSetToday} large>
+                •
+              </Button>
+              <Button onClick={onNextMonth} large>
+                »
+              </Button>
             </div>
           </div>
         </div>
