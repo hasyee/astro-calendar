@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import Moon from './Moon';
+import { useSelector, getLocation } from '../store';
+import { getNightInfo } from '../utils/getNightInfo';
+import Night from './Night';
 import './CalendarItem.scss';
 
 export default React.memo(function CalendarItem({ day, classNames, onPickDate }) {
+  const location = useSelector(getLocation);
+  const { night, moonNight, astroNight, moonlessNight, moonPhase } = useMemo(
+    () => getNightInfo(day.valueOf(), location[1], location[0], -18),
+    [day, location]
+  );
+
   return (
     <div
       key={day.format()}
@@ -14,10 +23,13 @@ export default React.memo(function CalendarItem({ day, classNames, onPickDate })
       <header>
         <div className="day-number">{day.format('D')}</div>
         <div className="moon-container">
-          <Moon phase={0.15} />
+          <Moon phase={moonPhase} />
         </div>
       </header>
-      <main></main>
+
+      <main>
+        <Night night={night} moonNight={moonNight} astroNight={astroNight} moonlessNight={moonlessNight} />
+      </main>
     </div>
   );
 });
