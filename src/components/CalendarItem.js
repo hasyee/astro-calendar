@@ -7,23 +7,19 @@ import { getNightInfo } from '../utils/getNightInfo';
 import Night from './Night';
 import './CalendarItem.scss';
 
-export default React.memo(function CalendarItem({ day, classNames, onPickDate }) {
+export default React.memo(function CalendarItem({ day, classNames }) {
   const location = useSelector(getLocation);
   const { night, moonNight, astroNight, moonlessNight, moonPhase } = useMemo(
-    () => getNightInfo(day.valueOf(), location[1], location[0], -18),
+    () => getNightInfo(day, location[1], location[0], -18),
     [day, location]
   );
 
   return (
-    <div
-      key={day.format()}
-      className={classnames('CalendarItem', day.isSame(moment(), 'day') && 'current', classNames)}
-      onClick={e => onPickDate(day)}
-    >
+    <div className={classnames('CalendarItem', moment(day).isSame(moment(), 'day') && 'current', classNames)}>
       <header>
         <div className="day">
-          <div className="day-number">{day.format('D')}</div>
-          <div className="day-name">{day.format('ddd')}</div>
+          <div className="day-number">{moment(day).format('D')}</div>
+          <div className="day-name">{moment(day).format('ddd')}</div>
         </div>
         <div className="moon-container">
           <Moon phase={moonPhase} />
