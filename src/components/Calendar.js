@@ -5,7 +5,6 @@ import './Calendar.scss';
 
 export default React.memo(function Calendar() {
   const days = useSelector(getDays);
-  console.log(days);
 
   return (
     <div className="Calendar">

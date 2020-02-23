@@ -5,7 +5,7 @@ import Moon from './Moon';
 import Night from './Night';
 import './CalendarItem.scss';
 
-export default React.memo(function CalendarItem({ day, classNames, moonPhase, ...bands }) {
+export default React.memo(function CalendarItem({ day, classNames, moonPhase, info, bands }) {
   return (
     <div className={classnames('CalendarItem', moment(day).isSame(moment(), 'day') && 'current', classNames)}>
       <header>

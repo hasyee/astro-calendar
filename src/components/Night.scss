@@ -1,5 +1,8 @@
 .Night {
+  position: relative;
+
   > * {
+    position: absolute;
     height: 100%;
   }
 
