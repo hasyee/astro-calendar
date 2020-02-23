@@ -1,6 +1,7 @@
 import moment from 'moment';
+import calcBands from './calcBands';
 
-export default function createDateObjects(timestamp, weekOffset = 0) {
+export default (timestamp, weekOffset = 0, location) => {
   const date = moment(timestamp);
   const startOfMonth = moment(date).startOf('month');
 
@@ -41,5 +42,5 @@ export default function createDateObjects(timestamp, weekOffset = 0) {
     i = i + 1;
   }
 
-  return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
-}
+  return calcBands([...prevMonthDays, ...currentMonthDays, ...nextMonthDays], location);
+};
