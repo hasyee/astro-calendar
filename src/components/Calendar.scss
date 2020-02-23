@@ -15,7 +15,7 @@ $border: rgba(16, 22, 26, 0.4);
     padding: .5rem;
   }
 
-  @media screen and (max-width: 650px) {
+  /* @media screen and (max-width: 650px) {
     .Calendar-header {
       flex-direction: column;
       align-items: flex-end;
@@ -24,7 +24,7 @@ $border: rgba(16, 22, 26, 0.4);
         margin-bottom: .5rem;
       }
     }
-  }
+  } */
 
   .date-controls {
     display: flex;
