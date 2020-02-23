@@ -3,7 +3,7 @@ import { Button, NumericInput, FormGroup } from '@blueprintjs/core';
 import { useLocation } from '../store';
 import './Location.scss';
 
-const Location = React.memo(() => {
+export default React.memo(() => {
   const [location, setLocation] = useLocation();
   const [lng, setLng] = useState(location[0]);
   const [lat, setLat] = useState(location[1]);
@@ -21,5 +21,3 @@ const Location = React.memo(() => {
     </div>
   );
 });
-
-export default Location;
