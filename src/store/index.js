@@ -2,12 +2,15 @@ import Store from 'repatch';
 import { useMemo } from 'react';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 import * as actions from './actions';
 export { useSelector } from 'react-redux';
 export * from './selectors';
 
 const store = new Store({
-  date: Date.now(),
+  date: moment()
+    .startOf('day')
+    .valueOf(),
   location: [19, 47],
   cache: {}
 });
