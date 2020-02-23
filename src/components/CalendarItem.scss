@@ -51,17 +51,13 @@ $border: rgba(255, 255, 255, 0.5);
     flex: 1 0 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     .band-container {
       flex: 0 0 auto;
       display: flex;
       flex-direction: column;
       height: 100%;
-      max-height: 80%;
+      max-height: 20px;
     }
-    /* .moon-container {
-      flex: 1 1 0;
-      display: flex;
-      flex-direction: column;
-    } */
   }
 }
