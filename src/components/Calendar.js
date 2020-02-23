@@ -4,6 +4,7 @@ import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import { useSelector, useActions, getDate } from '../store';
 import Location from './Location';
+import CalendarItem from './CalendarItem';
 import './Calendar.scss';
 
 export default React.memo(function Calendar() {
@@ -15,12 +16,14 @@ export default React.memo(function Calendar() {
   const handleMonthChange = useCallback(date => setDate(date.valueOf()), [setDate]);
   const handleDatePick = useCallback(date => console.log(date), []);
   const handleSetToday = useCallback(() => setDate(Date.now()), [setDate]);
+  const renderDay = useCallback(props => <CalendarItem {...props} />, []);
 
   return (
     <CalendarComponent
       date={moment(date)}
       onChangeMonth={handleMonthChange}
       onPickDate={handleDatePick}
+      renderDay={renderDay}
       renderHeader={({ date, onPrevMonth, onNextMonth }) => (
         <div className="Calendar-header">
           <Button icon="locate" onClick={handleOpenLocationDialog}>

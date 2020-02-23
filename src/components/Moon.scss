@@ -1,0 +1,11 @@
+.Moon {
+  display: flex;
+  flex-direction: column;
+
+  .svg-container {
+    flex: 1 1 0;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
