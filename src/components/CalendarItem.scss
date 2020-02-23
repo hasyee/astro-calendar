@@ -1,4 +1,4 @@
-$border: rgba(16, 22, 26, 0.4); //rgba(255, 255, 255, 0.5);
+$border: rgba(16, 22, 26, 0.4);
 
 .CalendarItem {
   flex: 0 14.28571%;
@@ -33,22 +33,52 @@ $border: rgba(16, 22, 26, 0.4); //rgba(255, 255, 255, 0.5);
   header {
     padding: 0.5vw;
     display: flex;
-    flex: 1 1 0;
+    flex: 2 1 0;
     justify-content: space-between;
 
     .day {
-      width: 60%;
+      flex: 6 1 0;
       align-self: center;
-      text-align: left;
+      text-align: center;
+
+      @media screen and (min-width: 1000px) {
+        .day-number {
+          font-size: 2vw;
+        }
+      }
+      @media screen and (max-width: 1000px) {
+        .day-number {
+          font-size: 1.5rem;
+        }
+      }
+      @media screen and (min-width: 600px) {
+        .day-number {
+          font-weight: 200;
+        }
+      }
+      @media screen and (max-width: 600px) {
+        .day-number {
+          font-size: 1rem;
+        }
+      }
     }
 
     .moon-container {
-      width: 40%;
+      width: 100%;
+      flex: 4 1 0;
       display: flex;
       flex-direction: column;
       > * {
         flex: 1 1 0;
       }
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    header {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
   }
 
