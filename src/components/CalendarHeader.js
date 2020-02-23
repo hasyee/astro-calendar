@@ -11,8 +11,17 @@ export default React.memo(function CalendarHeader() {
   const [isOpenLocationDialog, setIsOpenLocationDialog] = useState(false);
   const handleOpenLocationDialog = useCallback(() => setIsOpenLocationDialog(true), []);
   const handleCloseLocationDialog = useCallback(() => setIsOpenLocationDialog(false), []);
-  const handlePrevMonth = useCallback(() => setDate(changeMonth(date, -1)), [setDate, date]);
-  const handleNextMonth = useCallback(() => setDate(changeMonth(date, +1)), [setDate, date]);
+  const updateMonth = useCallback(
+    value =>
+      setDate(
+        moment(date)
+          .add(value, 'months')
+          .valueOf()
+      ),
+    [date, setDate]
+  );
+  const handlePrevMonth = useCallback(() => updateMonth(-1), [updateMonth]);
+  const handleNextMonth = useCallback(() => updateMonth(+1), [updateMonth]);
   const handleThisMonth = useCallback(() => setDate(Date.now()), [setDate]);
 
   return (
@@ -38,8 +47,3 @@ export default React.memo(function CalendarHeader() {
     </div>
   );
 });
-
-const changeMonth = (date, value) =>
-  moment(date)
-    .add(value, 'months')
-    .valueOf();
