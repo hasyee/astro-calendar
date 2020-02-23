@@ -17,6 +17,19 @@
       > *:not(:first-child) {
         margin-left: 0.5rem;
       }
+
+      @media screen and (min-width: 600px) {
+        .current-date {
+          font-size: 1.5rem;
+          font-weight: 200;
+        }
+      }
+
+      @media screen and (max-width: 400px) {
+        .current-date {
+          font-size: .7rem;
+        }
+      }
     }
   }
 }
