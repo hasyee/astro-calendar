@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react';
-import { useSelector, getDateObjects } from '../store';
-import CalendarHeader from './CalendarHeader';
+import { useSelector, getDays } from '../store';
 import CalendarItem from './CalendarItem';
 import './Calendar.scss';
 
 export default React.memo(function Calendar() {
-  const dateObjects = useSelector(getDateObjects);
-  const renderDay = useCallback(props => <CalendarItem {...props} />, []);
+  const days = useSelector(getDays);
+  console.log(days);
 
   return (
     <div className="Calendar">
-      <CalendarHeader />
-      <div className="grid">{dateObjects.map(renderDay)}</div>
+      <div className="grid">
+        {days.map(props => (
+          <CalendarItem key={props.day} {...props} />
+        ))}
+      </div>
     </div>
   );
 });

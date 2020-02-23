@@ -3,9 +3,9 @@ import moment from 'moment';
 import { Button } from '@blueprintjs/core';
 import { useSelector, useActions, getDate } from '../store';
 import Location from './Location';
-import './CalendarHeader.scss';
+import './Header.scss';
 
-export default React.memo(function CalendarHeader() {
+export default React.memo(function Header() {
   const date = useSelector(getDate);
   const { setDate } = useActions();
   const [isOpenLocationDialog, setIsOpenLocationDialog] = useState(false);
@@ -25,7 +25,7 @@ export default React.memo(function CalendarHeader() {
   const handleThisMonth = useCallback(() => setDate(Date.now()), [setDate]);
 
   return (
-    <div className="CalendarHeader">
+    <div className="Header">
       <div className="action-bar">
         <Button icon="locate" onClick={handleOpenLocationDialog} large>
           Location
