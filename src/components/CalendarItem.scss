@@ -27,15 +27,15 @@ $border: rgba(16, 22, 26, 0.4);
   }
 
   header {
-    padding: 0.5rem;
+    padding: 0.5vw;
     display: flex;
     flex: 1 1 0;
     justify-content: space-between;
 
     .day-number {
-      flex: 1 1 0;
-      display: flex;
-      align-items: center;
+    }
+
+    .day-name {
     }
 
     .moon-container {

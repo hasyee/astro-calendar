@@ -8,27 +8,21 @@
     color: white;
     text-align: center;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem;
-  }
+    flex-direction: column;
 
-  /* @media screen and (max-width: 650px) {
-    .Calendar-header {
-      flex-direction: column;
-      align-items: flex-end;
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem;
 
-      > div:not(:last-child) {
-        margin-bottom: .5rem;
+      .date-controls {
+        display: flex;
+        align-items: center;
+        > *:not(:first-child) {
+          margin-left: 0.5rem;
+        }
       }
-    }
-  } */
-
-  .date-controls {
-    display: flex;
-    align-items: center;
-    > *:not(:first-child) {
-      margin-left: 0.5rem;
     }
   }
 

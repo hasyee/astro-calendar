@@ -21,7 +21,10 @@ export default React.memo(function CalendarItem({ day, classNames, onPickDate })
       onClick={e => onPickDate(day)}
     >
       <header>
-        <div className="day-number">{day.format('D')}</div>
+        <div className="day">
+          <div className="day-number">{day.format('D')}</div>
+          <div className="day-name">{day.format('ddd')}</div>
+        </div>
         <div className="moon-container">
           <Moon phase={moonPhase} />
         </div>
