@@ -17,10 +17,10 @@ export default React.memo(function Location({ isOpen, onClose }) {
     <Dialog icon="locate" title="Location" isOpen={isOpen} onClose={onClose}>
       <div className={Classes.DIALOG_BODY}>
         <FormGroup label="Lat" inline className="form-group">
-          <NumericInput value={lat} onValueChange={setLat} min={-90} max={+90} />
+          <NumericInput value={lat || ''} onValueChange={setLat} min={-90} max={+90} />
         </FormGroup>
         <FormGroup label="Lng" inline className="form-group">
-          <NumericInput value={lng} onValueChange={setLng} min={-180} max={+180} />
+          <NumericInput value={lng || ''} onValueChange={setLng} min={-180} max={+180} />
         </FormGroup>
       </div>
       <div className={Classes.DIALOG_FOOTER}>
