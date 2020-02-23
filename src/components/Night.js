@@ -11,7 +11,7 @@ const f = interval => {
 };
 
 export default React.memo(function Night({ night, moonNight, astroNight, moonlessNight }) {
-  console.log({ night: f(night), moonNight: f(moonNight), astroNight: f(astroNight), moonlessNight: f(moonlessNight) });
+  //console.log({ night: f(night), moonNight: f(moonNight), astroNight: f(astroNight), moonlessNight: f(moonlessNight) });
   return (
     <div className="Night">
       <div className="daylight" />
