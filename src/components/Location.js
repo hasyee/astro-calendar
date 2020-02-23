@@ -3,7 +3,7 @@ import { Button, NumericInput, FormGroup } from '@blueprintjs/core';
 import { useLocation } from '../store';
 import './Location.scss';
 
-const Location = () => {
+const Location = React.memo(() => {
   const [location, setLocation] = useLocation();
   const [lng, setLng] = useState(location[0]);
   const [lat, setLat] = useState(location[1]);
@@ -17,9 +17,9 @@ const Location = () => {
       <FormGroup label="Lng" inline className="form-group">
         <NumericInput value={lng} onValueChange={setLng} min={-180} max={+180} />
       </FormGroup>
-      <Button onClick={handleSubmit}>SUBMIT</Button>
+      <Button onClick={handleSubmit}>OK</Button>
     </div>
   );
-};
+});
 
 export default Location;
