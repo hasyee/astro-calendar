@@ -32,10 +32,13 @@ $border: rgba(16, 22, 26, 0.4);
     flex: 1 1 0;
     justify-content: space-between;
 
-    .day-number {
-    }
+    .day {
+      align-self: center;
+      .day-number {
+      }
 
-    .day-name {
+      .day-name {
+      }
     }
 
     .moon-container {
