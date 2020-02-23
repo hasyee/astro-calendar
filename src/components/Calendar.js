@@ -20,6 +20,7 @@ export default React.memo(function Calendar() {
 
   return (
     <CalendarComponent
+      weekOffset={1}
       date={moment(date)}
       onChangeMonth={handleMonthChange}
       onPickDate={handleDatePick}
