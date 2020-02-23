@@ -1,0 +1,22 @@
+.Night {
+  > * {
+    height: 100%;
+  }
+
+  .daylight {
+    background-color: lightblue;
+    width: 100%;
+  }
+
+  .night {
+    background-color: #01579b;
+  }
+
+  .astroNight {
+    background-color: grey;
+  }
+
+  .moonlessNight {
+    background-color: black;
+  }
+}
