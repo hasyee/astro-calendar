@@ -6,7 +6,7 @@ import { useDate } from '../store';
 import Location from './Location';
 import './Calendar.scss';
 
-export default () => {
+export default React.memo(() => {
   const [date, setDate] = useDate();
 
   const handleMonthChange = useCallback(date => setDate(date.valueOf()), [setDate]);
@@ -24,11 +24,11 @@ export default () => {
           <div className="date-controls">
             <div className="Calendar-header-currentDate">{date.format('MMMM YYYY')}</div>
             <Button onClick={onPrevMonth}>«</Button>
-            <Button onClick={handleSetToday}>TODAY</Button>
+            <Button onClick={handleSetToday}>•</Button>
             <Button onClick={onNextMonth}>»</Button>
           </div>
         </div>
       )}
     />
   );
-};
+});
