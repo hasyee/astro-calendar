@@ -19,7 +19,7 @@ export default React.memo(function Info({ night, moonNight, astroNight, moonless
           </tr>
           <tr>
             <td>
-              <span className="dot" /> Astro night
+              <span className="dot astroNight" /> Astro night
             </td>
             <td>From</td>
             <td>{astroNight && Number.isFinite(astroNight.start) ? moment(astroNight.start).format('HH:mm') : '-'}</td>

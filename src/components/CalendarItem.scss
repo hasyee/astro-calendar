@@ -35,6 +35,10 @@ $popover-background: #182026;
 
   &.selected {
     background-color: $popover-background;
+
+    .Bands {
+      opacity: 0.5;
+    }
   }
 
   header {
