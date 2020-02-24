@@ -2,18 +2,12 @@ import Store from 'repatch';
 import { useMemo } from 'react';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
-import moment from 'moment';
+import initialState from './initialState';
 import * as actions from './actions';
 export { useSelector } from 'react-redux';
 export * from './selectors';
 
-const store = new Store({
-  date: moment()
-    .startOf('month')
-    .startOf('day')
-    .valueOf(),
-  location: [19, 47]
-});
+const store = new Store(initialState);
 
 window.store = store;
 
