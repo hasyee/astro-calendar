@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
-import { Popover, Classes } from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core';
 import Moon from './Moon';
-import Night from './Night';
+import Bands from './Bands';
 import Info from './Info';
 import './CalendarItem.scss';
 
@@ -11,14 +11,7 @@ export default React.memo(function CalendarItem({ day, classNames, moonPhase, in
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const handleClick = useCallback(() => setIsInfoOpen(!isInfoOpen), [isInfoOpen]);
   const handleCloseInfo = useCallback(() => setIsInfoOpen(false), []);
-  const content = useMemo(
-    () => (
-      <div className="popover-content">
-        <Info {...info} />
-      </div>
-    ),
-    [info]
-  );
+  const content = useMemo(() => <Info {...info} />, [info]);
 
   return (
     <Popover
@@ -50,7 +43,7 @@ export default React.memo(function CalendarItem({ day, classNames, moonPhase, in
 
         <main>
           <div className="band-container">
-            <Night {...bands} />
+            <Bands {...bands} />
           </div>
         </main>
       </div>

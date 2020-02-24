@@ -3,7 +3,7 @@
 
   .moon-phase {
     text-align: center;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
   }
 
   table {
@@ -16,9 +16,14 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
+      border: 1px solid white;
 
       &.night {
         background-color: #01579b;
+      }
+
+      &.astroNight {
+        border: 0;
       }
 
       &.moon {
