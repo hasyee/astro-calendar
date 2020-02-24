@@ -1,13 +1,15 @@
-import Store from 'repatch';
+import Store, { thunk } from 'repatch';
 import { useMemo } from 'react';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
 import initialState from './initialState';
 import * as actions from './actions';
+import * as geolocation from '../utils/geolocation';
+import * as nominatim from '../utils/nominatim';
 export { useSelector } from 'react-redux';
 export * from './selectors';
 
-const store = new Store(initialState);
+const store = new Store(initialState).addMiddleware(thunk.withExtraArgument({ geolocation, nominatim }));
 
 window.store = store;
 

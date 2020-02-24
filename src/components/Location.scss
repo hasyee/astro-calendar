@@ -1,20 +1,15 @@
 .Location {
-  padding: .5rem;
-  /* flex: 0 0 auto;
-  display: flex;
-  align-items: center;
+  .lat-lon {
+    display: flex;
+    > * {
+      flex: 1 1 0;
+    }
 
-  .input {
-    input {
-      width: 100px;
+    > *:first-child {
+      margin-right: 0.5rem;
+    }
+    > *:last-child {
+      margin-left: 0.5rem;
     }
   }
-
-  .form-group {
-    margin-bottom: 0;
-  }
-
-  > *:not(:last-child) {
-    margin-right: .5rem !important;
-  } */
 }

@@ -5,4 +5,17 @@ export const getDate = state => state.date;
 
 export const getLocation = state => state.location;
 
-export const getDays = createSelector([getDate, getLocation], (date, location) => createDays(date, 1, location));
+export const getCoords = createSelector(getLocation, location => location.coords);
+
+export const getLocationName = createSelector(getLocation, location => location.name);
+
+export const getLocationShortName = createSelector(getLocationName, name =>
+  name
+    ? name
+        .split(',')
+        .map(term => term.trim())
+        .filter(_ => _)[0] || ''
+    : ''
+);
+
+export const getDays = createSelector([getDate, getCoords], (date, coords) => createDays(date, 1, coords));
