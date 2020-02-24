@@ -2,19 +2,20 @@ import React, { useState, useCallback, useEffect } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
 import { useSelector, useActions, getCoords } from '../store';
+import { useDebounce } from '../hooks/debounce';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
 
 export default React.memo(function Location({ isOpen, onClose }) {
   const coords = useSelector(getCoords);
   const { setLocation } = useActions();
-  const [lng, setLng] = useState(coords[0]);
-  const [lat, setLat] = useState(coords[1]);
+  const [lng, setLng, handleChangeLng] = useDebounce(value => setLocation([value, lat]), coords[0]);
+  const [lat, setLat, handleChangeLat] = useDebounce(value => setLocation([lng, value]), coords[1]);
 
   useEffect(() => {
     setLng(coords[0]);
     setLat(coords[1]);
-  }, [coords]);
+  }, [coords, setLng, setLat]);
 
   const { isFetchingLocation, locationFetchingError, handleUseMyLocation } = useMyLocation(onClose);
 
@@ -26,7 +27,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Latitude">
             <NumericInput
               value={lat || ''}
-              onValueChange={setLat}
+              onValueChange={handleChangeLat}
               fill
               min={-90}
               max={+90}
@@ -37,7 +38,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Longitude">
             <NumericInput
               value={lng || ''}
-              onValueChange={setLng}
+              onValueChange={handleChangeLng}
               fill
               min={-180}
               max={+180}
