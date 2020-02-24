@@ -10,7 +10,9 @@ export default React.memo(function Calendar() {
     <div className="Calendar">
       <div className="grid">
         {days.map(props => (
-          <CalendarItem key={props.day} {...props} />
+          <div className="cell">
+            <CalendarItem key={props.day} {...props} />
+          </div>
         ))}
       </div>
     </div>

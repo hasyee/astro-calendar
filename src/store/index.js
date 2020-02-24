@@ -9,6 +9,7 @@ export * from './selectors';
 
 const store = new Store({
   date: moment()
+    .startOf('month')
     .startOf('day')
     .valueOf(),
   location: [19, 47]
