@@ -1,3 +1,22 @@
+$popover-background: #182026;
+
+.target-container {
+  width: 100%;
+  height: 100%;
+}
+
+.popover {
+  .bp3-popover-content {
+    background-color: $popover-background !important;
+    max-width: unset !important;
+  }
+  svg {
+    path {
+      fill: $popover-background !important;
+    }
+  }
+}
+
 .CalendarItem {
   width: 100%;
   height: 100%;
@@ -12,6 +31,10 @@
 
   &.current {
     background-color: #6f3434;
+  }
+
+  &.selected {
+    background-color: $popover-background;
   }
 
   header {

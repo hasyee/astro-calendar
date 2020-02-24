@@ -1,0 +1,39 @@
+.Info {
+  padding: 0.5rem;
+
+  .moon-phase {
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+
+  table {
+    td {
+      padding: 0.2rem;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+      &.night {
+        background-color: #01579b;
+      }
+
+      &.moon {
+        background-color: grey;
+      }
+
+      &.moonlessNight {
+        background-color: black;
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      td {
+        font-size: 0.7rem;
+      }
+    }
+  }
+}
