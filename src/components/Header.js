@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
-import { useSelector, useActions, getDate } from '../store';
+import { useSelector, useActions, getDate, getLocationShortName } from '../store';
 import Location from './Location';
 import './Header.scss';
 
 export default React.memo(function Header() {
   const date = useSelector(getDate);
+  const locationShortName = useSelector(getLocationShortName);
   const { setDate } = useActions();
   const [isOpenLocationDialog, setIsOpenLocationDialog] = useState(false);
   const handleOpenLocationDialog = useCallback(() => setIsOpenLocationDialog(true), []);
@@ -36,7 +37,7 @@ export default React.memo(function Header() {
     <div className="Header">
       <div className="action-bar">
         <Button icon="locate" onClick={handleOpenLocationDialog} large>
-          Location
+          {locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}
         </Button>
         <Location isOpen={isOpenLocationDialog} onClose={handleCloseLocationDialog} />
         <div className="date-controls">
