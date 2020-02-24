@@ -1,5 +1,14 @@
 .Info {
   padding: 0.5rem;
+  font-size: 0.8rem;
+
+  @media screen and (max-width: 370px) {
+    font-size: 0.7rem;
+  }
+
+  @media screen and (max-width: 350px) {
+    font-size: 0.6rem;
+  }
 
   .moon-phase {
     text-align: center;
@@ -32,12 +41,6 @@
 
       &.moonlessNight {
         background-color: black;
-      }
-    }
-
-    @media screen and (max-width: 400px) {
-      td {
-        font-size: 0.7rem;
       }
     }
   }
