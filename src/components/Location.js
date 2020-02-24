@@ -24,17 +24,6 @@ export default React.memo(function Location({ isOpen, onClose }) {
       <div className={classnames(Classes.DIALOG_BODY, 'Location')}>
         <PlaceSearch onSelectLocation={onClose} />
         <div className="lat-lon">
-          <FormGroup label="Latitude">
-            <NumericInput
-              value={lat || ''}
-              onValueChange={handleChangeLat}
-              fill
-              min={-90}
-              max={+90}
-              minorStepSize={0.0001}
-              disabled={isFetchingLocation}
-            />
-          </FormGroup>
           <FormGroup label="Longitude">
             <NumericInput
               value={lng || ''}
@@ -42,6 +31,17 @@ export default React.memo(function Location({ isOpen, onClose }) {
               fill
               min={-180}
               max={+180}
+              minorStepSize={0.0001}
+              disabled={isFetchingLocation}
+            />
+          </FormGroup>
+          <FormGroup label="Latitude">
+            <NumericInput
+              value={lat || ''}
+              onValueChange={handleChangeLat}
+              fill
+              min={-90}
+              max={+90}
               minorStepSize={0.0001}
               disabled={isFetchingLocation}
             />
