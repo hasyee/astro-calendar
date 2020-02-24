@@ -1,30 +1,20 @@
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import { useSelector, useActions, getLocationName } from '../store';
+import { useDebounce } from '../hooks/debounce';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const timeout = useRef();
-
   const locationName = useSelector(getLocationName);
 
-  const [query, setQuery] = useState(locationName);
+  const [query, setQuery, handleQueryChange] = useDebounce(async q => {
+    const results = await searchPlaces(q);
+    setItems(results);
+  }, locationName);
+
   const [items, setItems] = useState([]);
 
   const { searchPlaces, setLocation } = useActions();
-
-  const handleQueryChange = useCallback(
-    q => {
-      setQuery(q);
-      setItems([]);
-      if (timeout.current) clearTimeout(timeout.current);
-      timeout.current = setTimeout(async () => {
-        const results = await searchPlaces(q);
-        setItems(results);
-      }, 500);
-    },
-    [setQuery, searchPlaces]
-  );
 
   const handleItemSelect = useCallback(
     item => {
@@ -55,7 +45,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
 
   useEffect(() => {
     setQuery(locationName);
-  }, [locationName]);
+  }, [locationName, setQuery]);
 
   return (
     <FormGroup label="Search">
