@@ -1,55 +1,35 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import classnames from 'classnames';
 import moment from 'moment';
 import './Info.scss';
 
-export default React.memo(function Info({ night, moonNight, astroNight, moonlessNight, moonPhase }) {
+export default React.memo(function Info(info) {
+  const renderTransit = (name, interval, which) => (
+    <Fragment>
+      <td>{name}</td>
+      <td>{interval && Number.isFinite(interval[which]) ? moment(interval[which]).format('HH:mm') : '-'}</td>
+    </Fragment>
+  );
+
+  const renderRow = (name, key, start, end) => (
+    <tr>
+      <td>
+        <span className={classnames('dot', key)} /> {name}
+      </td>
+      {renderTransit(start, info[key], 'start')}
+      {renderTransit(end, info[key], 'end')}
+    </tr>
+  );
+
   return (
     <div className="Info">
-      <div className="moon-phase">Moon phase: {(moonPhase * 100).toFixed(0)}%</div>
+      <div className="moon-phase">Moon phase: {(info.moonPhase * 100).toFixed(0)}%</div>
       <table>
         <tbody>
-          <tr>
-            <td>
-              <span className="dot night" /> Night
-            </td>
-            <td>Sunset</td>
-            <td>{night && Number.isFinite(night.start) ? moment(night.start).format('HH:mm') : '-'}</td>
-            <td>Sunrise</td>
-            <td>{night && Number.isFinite(night.end) ? moment(night.end).format('HH:mm') : '-'}</td>
-          </tr>
-          <tr>
-            <td>
-              <span className="dot astroNight" /> Astro night
-            </td>
-            <td>From</td>
-            <td>{astroNight && Number.isFinite(astroNight.start) ? moment(astroNight.start).format('HH:mm') : '-'}</td>
-            <td>To</td>
-            <td>{astroNight && Number.isFinite(astroNight.end) ? moment(astroNight.end).format('HH:mm') : '-'}</td>
-          </tr>
-          <tr>
-            <td>
-              <span className="dot moon" /> Moon
-            </td>
-            <td>Moonrise</td>
-            <td>{moonNight && Number.isFinite(moonNight.end) ? moment(moonNight.end).format('HH:mm') : '-'}</td>
-            <td>Moonset</td>
-            <td>{moonNight && Number.isFinite(moonNight.start) ? moment(moonNight.start).format('HH:mm') : '-'}</td>
-          </tr>
-          <tr>
-            <td>
-              <span className="dot moonlessNight" /> Moonless night
-            </td>
-            <td>From</td>
-            <td>
-              {moonlessNight && Number.isFinite(moonlessNight.start)
-                ? moment(moonlessNight.start).format('HH:mm')
-                : '-'}
-            </td>
-            <td>To</td>
-            <td>
-              {moonlessNight && Number.isFinite(moonlessNight.end) ? moment(moonlessNight.end).format('HH:mm') : '-'}
-            </td>
-          </tr>
+          {renderRow('Night', 'night', 'Sunset', 'Sunrise')}
+          {renderRow('Astro night', 'astroNight', 'From', 'To')}
+          {renderRow('Moon', 'moonNight', 'Moonrise', 'Moonset')}
+          {renderRow('Moonless night', 'moonlessNight', 'From', 'To')}
         </tbody>
       </table>
     </div>
