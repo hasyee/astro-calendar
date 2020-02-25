@@ -8,14 +8,24 @@ import './PlaceSearch.scss';
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
   const locationName = useSelector(getLocationName);
 
-  const [query, setQuery, handleQueryChange] = useDebounce(async q => {
+  const [isSearching, setIsSearching] = useState(false);
+  const [query, setQuery, triggerDebounce] = useDebounce(async q => {
     const results = await searchPlaces(q);
+    setIsSearching(false);
     setItems(results);
   }, locationName);
 
   const [items, setItems] = useState([]);
 
   const { searchPlaces, setLocation } = useActions();
+
+  const handleQueryChange = useCallback(
+    nextValue => {
+      setIsSearching(true);
+      triggerDebounce(nextValue);
+    },
+    [setIsSearching, triggerDebounce]
+  );
 
   const handleItemSelect = useCallback(
     item => {
@@ -42,7 +52,10 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
 
   const inputValueRenderer = useCallback(item => item.display_name, []);
 
-  const noResults = useMemo(() => <MenuItem disabled text="No results." />, []);
+  const noResults = useMemo(() => (!!query && !isSearching ? <MenuItem disabled text="No results." /> : null), [
+    query,
+    isSearching
+  ]);
 
   useEffect(() => {
     setQuery(locationName);
