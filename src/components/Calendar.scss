@@ -1,7 +1,8 @@
 $border: #1f2c38;
 
 .Calendar {
-  flex: 1 1 0;
+  flex: 1 1 0%;
+  flex-basis: 0%;
 
   .grid {
     width: 100%;

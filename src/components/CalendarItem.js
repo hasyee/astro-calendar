@@ -36,9 +36,7 @@ export default React.memo(function CalendarItem({ day, classNames, moonPhase, in
         </header>
 
         <main>
-          <div className="band-container">
-            <Bands {...bands} />
-          </div>
+          <Bands {...bands} />
         </main>
       </div>
     ),
