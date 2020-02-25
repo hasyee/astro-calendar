@@ -6,7 +6,6 @@ const location = localStorage.getItem('location')
 
 const date = moment()
   .startOf('month')
-  .startOf('day')
   .valueOf();
 
 export default {
