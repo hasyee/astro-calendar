@@ -1,7 +1,7 @@
 import React from 'react';
 import './Bands.scss';
 
-export default React.memo(function Bands({ night, moonNight, astroNight, moonlessNight }) {
+export default React.memo(function Bands({ night, astroNight, moonlessNight }) {
   const renderBand = (name, band, i) => (
     <div key={i} className={name} style={{ left: `${band[0] * 100}%`, right: `${(1 - band[1]) * 100}%` }} />
   );
