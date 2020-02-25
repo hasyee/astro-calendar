@@ -3,6 +3,7 @@ import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import { useSelector, useActions, getLocationName } from '../store';
 import { useDebounce } from '../hooks/debounce';
+import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
   const locationName = useSelector(getLocationName);
@@ -51,7 +52,8 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     <FormGroup label="Search">
       <Suggest
         fill
-        popoverProps={{ minimal: true }}
+        popoverProps={{ minimal: true, popoverClassName: 'suggest-dropdown-popover' }}
+        inputProps={{ large: true }}
         query={query}
         onQueryChange={handleQueryChange}
         items={items}

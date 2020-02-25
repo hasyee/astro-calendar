@@ -26,6 +26,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
         <div className="lat-lon">
           <FormGroup label="Longitude">
             <NumericInput
+              large
               value={lng || ''}
               onValueChange={handleChangeLng}
               fill
@@ -37,6 +38,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
           </FormGroup>
           <FormGroup label="Latitude">
             <NumericInput
+              large
               value={lat || ''}
               onValueChange={handleChangeLat}
               fill
@@ -56,7 +58,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={handleUseMyLocation} icon={'locate'} loading={isFetchingLocation}>
+          <Button large onClick={handleUseMyLocation} icon={'locate'} loading={isFetchingLocation}>
             USE MY LOCATION
           </Button>
         </div>
