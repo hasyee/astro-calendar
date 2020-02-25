@@ -11,17 +11,11 @@ export default React.memo(function CalendarItem({ day, classNames, moonPhase, in
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const handleClick = useCallback(() => setIsInfoOpen(!isInfoOpen), [isInfoOpen]);
   const handleCloseInfo = useCallback(() => setIsInfoOpen(false), []);
-  const content = useMemo(() => <Info {...info} />, [info]);
 
-  return (
-    <Popover
-      isOpen={isInfoOpen}
-      onClose={handleCloseInfo}
-      hasBackdrop
-      targetClassName="target-container"
-      popoverClassName={classnames(null, 'popover')}
-      content={content}
-    >
+  const popoverContent = useMemo(() => isInfoOpen && <Info {...info} />, [info, isInfoOpen]);
+
+  const itemContent = useMemo(
+    () => (
       <div
         className={classnames(
           'CalendarItem',
@@ -47,6 +41,22 @@ export default React.memo(function CalendarItem({ day, classNames, moonPhase, in
           </div>
         </main>
       </div>
+    ),
+    [day, bands, isInfoOpen, classNames, moonPhase, handleClick]
+  );
+
+  return isInfoOpen ? (
+    <Popover
+      isOpen={isInfoOpen}
+      onClose={handleCloseInfo}
+      hasBackdrop
+      targetClassName="target-container"
+      popoverClassName={classnames(null, 'popover')}
+      content={popoverContent}
+    >
+      {itemContent}
     </Popover>
+  ) : (
+    itemContent
   );
 });
