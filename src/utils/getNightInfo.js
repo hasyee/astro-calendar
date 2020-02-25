@@ -9,13 +9,14 @@ export const getNightInfo = (date, latitude, longitude, twilight) => {
   const night = getNight(date, location);
   const astroNight = night ? getNight(date, location, degToRad(twilight), true) : null;
   const moonNight = getMoonNight(astroNight, location);
-  const moonPhase = getMoonPhase(toMidnight(date));
+  const { moonPhase, moonIllumination } = getMoonPhase(toMidnight(date));
   const moonlessNight = getIntersection(astroNight, moonNight);
   return {
     night,
     moonNight,
     astroNight,
     moonlessNight,
-    moonPhase
+    moonPhase,
+    moonIllumination
   };
 };
