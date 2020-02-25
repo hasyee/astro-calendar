@@ -17,3 +17,9 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
+
+window.addEventListener('beforeinstallprompt', deferredPromptEvent => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  deferredPromptEvent.preventDefault();
+  deferredPromptEvent.prompt();
+});
