@@ -42,6 +42,6 @@ export const getMoonNight = (interval, loc) => {
 };
 
 export const getMoonPhase = midnight => {
-  const { phase } = SunCalc.getMoonIllumination(new Date(midnight));
-  return phase;
+  const { phase: moonPhase, fraction: moonIllumination } = SunCalc.getMoonIllumination(new Date(midnight));
+  return { moonPhase, moonIllumination };
 };

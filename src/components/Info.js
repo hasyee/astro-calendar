@@ -23,9 +23,12 @@ export default React.memo(function Info(info) {
 
   return (
     <div className="Info">
-      <div className="moon-phase">Moon phase: {(info.moonPhase * 100).toFixed(0)}%</div>
       <table>
         <tbody>
+          <tr>
+            <td colSpan={2}>Moon phase: {(info.moonPhase * 100).toFixed(0)}%</td>
+            <td colSpan={3}>Moon illumination: {(info.moonIllumination * 100).toFixed(0)}%</td>
+          </tr>
           {renderRow('Night', 'night', 'Sunset', 'Sunrise')}
           {renderRow('Astro night', 'astroNight', 'From', 'To')}
           {renderRow('Moon', 'moonNight', 'Moonset', 'Moonrise')}
