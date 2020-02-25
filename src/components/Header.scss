@@ -15,9 +15,11 @@
   flex-direction: column;
 
   button {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .action-bar {
@@ -30,6 +32,11 @@
       display: flex;
       align-items: center;
       > *:not(:first-child) {
+        margin-left: 0.5rem;
+      }
+
+      .current-date {
+        white-space: nowrap;
         margin-left: 0.5rem;
       }
 
