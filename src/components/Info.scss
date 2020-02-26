@@ -2,12 +2,14 @@
   padding: 0.5rem;
   font-size: 0.8rem;
 
-  @media screen and (max-width: 370px) {
+  @media screen and (max-width: 420px) {
     font-size: 0.7rem;
   }
-
-  @media screen and (max-width: 350px) {
+  @media screen and (max-width: 400px) {
     font-size: 0.6rem;
+  }
+  @media screen and (max-width: 340px) {
+    font-size: 0.55rem;
   }
 
   table {
