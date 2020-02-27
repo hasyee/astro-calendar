@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import moment from 'moment';
 import { createSharedStateHook, createSharedSubStateHook, createSharedResourceHook } from './palpatine';
-import createDays from './calculator';
+import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export const useDate = createSharedStateHook(
   moment()
@@ -17,6 +17,8 @@ export const useLocation = createSharedStateHook(
         name: ''
       }
 );
+
+export const useDays = createSharedStateHook([]);
 
 export const useCoords = createSharedSubStateHook(
   () => useLocation()[0].coords,
@@ -46,10 +48,23 @@ export const useLocationShortName = () => {
   );
 };
 
-export const useDays = () => {
+export const useWorker = () => {
+  const jobId = useRef(0);
+  const worker = useRef(Worker());
   const [date] = useDate();
   const [coords] = useCoords();
-  return useMemo(() => createDays(date, 1, coords), [date, coords]);
+
+  useEffect(() => {
+    worker.current.addEventListener('message', message => {
+      if (!message.data.days || message.data.jobId !== jobId.current) return;
+      useDays.set(message.data.days);
+    });
+  }, []);
+
+  useEffect(() => {
+    worker.current.calc(++jobId.current, date, 1, coords);
+    //useDays.set([]);
+  }, [date, coords]);
 };
 
 export const useGeolocation = createSharedResourceHook({
@@ -117,8 +132,6 @@ export const useDebounce = (callback, initValue = '', timeout = 500) => {
   );
 
   useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
-
-  // TODO add updater effect by initialValue
 
   return [value, trigger];
 };
