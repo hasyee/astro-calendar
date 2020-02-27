@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useCoords, useDebounce } from '../hooks';
+import { useCoords, useDebounce, useMyLocation } from '../hooks';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
-import { useGeolocation } from '../hooks';
 
 export default React.memo(function Location({ isOpen, onClose }) {
   const [coords, setCoords] = useCoords();
@@ -16,7 +15,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
     setLat(coords[1]);
   }, [coords, setLng, setLat]);
 
-  const { isFetchingLocation, locationFetchingError, handleUseMyLocation } = useMyLocation(onClose);
+  const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(onClose);
 
   return (
     <Dialog icon="locate" title="Location" isOpen={isOpen} onClose={onClose} canOutsideClickClose={!isFetchingLocation}>
@@ -57,7 +56,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button large onClick={handleUseMyLocation} icon={'locate'} loading={isFetchingLocation}>
+          <Button large onClick={fetchLocation} icon={'locate'} loading={isFetchingLocation}>
             USE MY LOCATION
           </Button>
         </div>
@@ -65,25 +64,3 @@ export default React.memo(function Location({ isOpen, onClose }) {
     </Dialog>
   );
 });
-
-const useMyLocation = onClose => {
-  const geolocation = useGeolocation();
-  const [, setCoords] = useCoords();
-  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
-  const [locationFetchingError, setLocationFetchingError] = useState(null);
-
-  const handleUseMyLocation = useCallback(async () => {
-    try {
-      setIsFetchingLocation(true);
-      const coords = await geolocation.fetch();
-      setCoords(coords);
-      onClose();
-    } catch (error) {
-      setLocationFetchingError(error.message);
-    } finally {
-      setIsFetchingLocation(false);
-    }
-  }, [setIsFetchingLocation, geolocation, setCoords, onClose]);
-
-  return { isFetchingLocation, locationFetchingError, handleUseMyLocation };
-};
