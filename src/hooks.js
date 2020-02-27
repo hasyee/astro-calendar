@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { createSharedStateHook, createSharedResourceHook } from './palpatine';
+import { createSharedStateHook, createSharedSubStateHook, createSharedResourceHook } from './palpatine';
 import createDays from './calculator';
 
 export const useDate = createSharedStateHook(
@@ -18,25 +18,19 @@ export const useLocation = createSharedStateHook(
       }
 );
 
-export const useCoords = () => {
-  const [location, setLocation] = useLocation();
-  return [
-    location.coords,
-    useCallback(
-      coordsOrReducer =>
-        setLocation(location => ({
-          coords: typeof coordsOrReducer === 'function' ? coordsOrReducer(location.coords) : coordsOrReducer,
-          name: ''
-        })),
-      [setLocation]
-    )
-  ];
-};
+export const useCoords = createSharedSubStateHook(
+  () => useLocation()[0].coords,
+  coordsOrReducer =>
+    useLocation.set(location => ({
+      coords: typeof coordsOrReducer === 'function' ? coordsOrReducer(location.coords) : coordsOrReducer,
+      name: ''
+    }))
+);
 
-export const useLocationName = () => {
-  const [location, setLocation] = useLocation();
-  return [location.name, name => setLocation(location => ({ ...location, name }))];
-};
+export const useLocationName = createSharedSubStateHook(
+  () => useLocation()[0].name,
+  name => useLocation.set(location => ({ ...location, name }))
+);
 
 export const useLocationShortName = () => {
   const [{ name, coords }] = useLocation();
@@ -86,7 +80,6 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
-  const [, setCoords] = useCoords(); // TODO - use setter only
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
@@ -94,14 +87,14 @@ export const useMyLocation = onFinish => {
     try {
       setIsFetchingLocation(true);
       const coords = await geolocation.fetch();
-      setCoords(coords);
+      useCoords.set(coords);
       onFinish();
     } catch (error) {
       setLocationFetchingError(error.message);
     } finally {
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, geolocation, setCoords, onFinish]);
+  }, [setIsFetchingLocation, geolocation, onFinish]);
 
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };

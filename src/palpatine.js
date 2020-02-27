@@ -26,4 +26,15 @@ export const createSharedStateHook = initialState => {
   return useSharedState;
 };
 
+export const createSharedSubStateHook = (valueHook, set) => {
+  const subStateHook = set
+    ? (...args) => {
+        const value = valueHook();
+        return [value, set];
+      }
+    : valueHook;
+  subStateHook.set = set;
+  return subStateHook;
+};
+
 export const createSharedResourceHook = resource => () => useMemo(() => resource, []);
