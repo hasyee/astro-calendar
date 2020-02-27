@@ -7,15 +7,18 @@ import './Location.scss';
 
 export default React.memo(function Location({ isOpen, onClose }) {
   const [coords, setCoords] = useCoords();
-  const [lng, setLng, handleChangeLng] = useDebounce(value => setCoords([value, lat]), coords[0]);
-  const [lat, setLat, handleChangeLat] = useDebounce(value => setCoords([lng, value]), coords[1]);
+  const [lng, setLng] = useDebounce(value => setCoords([value, lat]), coords[0]);
+  const [lat, setLat] = useDebounce(value => setCoords([lng, value]), coords[1]);
 
-  useEffect(() => {
-    setLng(coords[0]);
-    setLat(coords[1]);
-  }, [coords, setLng, setLat]);
+  /* useEffect(() => {
+    //console.log('run effect', lng, coords[0], lat, coords[1], lng === coords[0], lat === coords[1]);
+    if (lng !== coords[0]) setLng(coords[0]);
+    if (lat !== coords[1]) setLat(coords[1]);
+  }, [coords, lng, lat, setLng, setLat]); */
 
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(onClose);
+
+  console.log('render Location');
 
   return (
     <Dialog icon="locate" title="Location" isOpen={isOpen} onClose={onClose} canOutsideClickClose={!isFetchingLocation}>
@@ -26,7 +29,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
             <NumericInput
               large
               value={lng || ''}
-              onValueChange={handleChangeLng}
+              onValueChange={setLng}
               fill
               min={-180}
               max={+180}
@@ -38,7 +41,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
             <NumericInput
               large
               value={lat || ''}
-              onValueChange={handleChangeLat}
+              onValueChange={setLat}
               fill
               min={-90}
               max={+90}

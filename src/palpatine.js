@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
-export const useSharedState = initialState => {
+export const createSharedStateHook = initialState => {
   let state = initialState;
   const listeners = new Set();
 
@@ -26,4 +26,4 @@ export const useSharedState = initialState => {
   return useSharedState;
 };
 
-export const useSharedResource = resource => () => resource;
+export const createSharedResourceHook = resource => () => useMemo(() => resource, []);
