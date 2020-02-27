@@ -16,7 +16,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     useCallback(
       async query => {
         if (!query) return setItems([]);
-        setIsSearching(true);
+
         const results = await nominatim.search(query);
         setIsSearching(false);
         setItems(results);
@@ -29,6 +29,14 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
   useEffect(() => {
     setQuery(locationName, false);
   }, [locationName, setQuery]);
+
+  const handleQueryChange = useCallback(
+    query => {
+      setIsSearching(true);
+      setQuery(query);
+    },
+    [setIsSearching, setQuery]
+  );
 
   const handleItemSelect = useCallback(
     item => {
@@ -67,7 +75,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
         popoverProps={{ minimal: true, popoverClassName: 'suggest-dropdown-popover' }}
         inputProps={{ large: true }}
         query={query}
-        onQueryChange={setQuery}
+        onQueryChange={handleQueryChange}
         items={items}
         itemRenderer={itemRenderer}
         inputValueRenderer={inputValueRenderer}
