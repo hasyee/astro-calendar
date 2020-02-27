@@ -1,36 +1,35 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-import { useSelector, useActions, getLocationName } from '../store';
-import { useDebounce } from '../hooks/debounce';
+import { useLocationName, useNominatim, useLocation, useDebounce } from '../hooks';
 import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const locationName = useSelector(getLocationName);
+  const [locationName] = useLocationName();
+  const setLocation = useLocation.set;
+  const nominatim = useNominatim();
 
   const [isSearching, setIsSearching] = useState(false);
-  const [query, setQuery, triggerDebounce] = useDebounce(async q => {
-    const results = await searchPlaces(q);
+  const [query, setQuery, search, abortSearch] = useDebounce(async query => {
+    const results = await nominatim.search(query);
     setIsSearching(false);
     setItems(results);
   }, locationName);
 
   const [items, setItems] = useState([]);
 
-  const { searchPlaces, setLocation } = useActions();
-
   const handleQueryChange = useCallback(
-    nextValue => {
+    query => {
       setIsSearching(true);
-      triggerDebounce(nextValue);
+      search(query);
     },
-    [setIsSearching, triggerDebounce]
+    [setIsSearching, search]
   );
 
   const handleItemSelect = useCallback(
     item => {
       setQuery(item.display_name);
-      setLocation([Number(item.lon), Number(item.lat)], item.display_name);
+      setLocation({ coords: [Number(item.lon), Number(item.lat)], name: item.display_name });
       onSelectLocation();
     },
     [setQuery, setLocation, onSelectLocation]
@@ -60,6 +59,8 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
   useEffect(() => {
     setQuery(locationName);
   }, [locationName, setQuery]);
+
+  useEffect(() => abortSearch, [abortSearch]);
 
   return (
     <FormGroup label="Search">

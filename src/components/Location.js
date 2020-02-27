@@ -1,16 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useSelector, useActions, getCoords } from '../store';
-import { useDebounce } from '../hooks/debounce';
+import { useCoords, useDebounce } from '../hooks';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
+import { useGeolocation } from '../hooks';
 
 export default React.memo(function Location({ isOpen, onClose }) {
-  const coords = useSelector(getCoords);
-  const { setLocation } = useActions();
-  const [lng, setLng, handleChangeLng] = useDebounce(value => setLocation([value, lat]), coords[0]);
-  const [lat, setLat, handleChangeLat] = useDebounce(value => setLocation([lng, value]), coords[1]);
+  const [coords, setCoords] = useCoords();
+  const [lng, setLng, handleChangeLng] = useDebounce(value => setCoords([value, lat]), coords[0]);
+  const [lat, setLat, handleChangeLat] = useDebounce(value => setCoords([lng, value]), coords[1]);
 
   useEffect(() => {
     setLng(coords[0]);
@@ -68,22 +67,23 @@ export default React.memo(function Location({ isOpen, onClose }) {
 });
 
 const useMyLocation = onClose => {
-  const { fetchLocation, setLocation } = useActions();
+  const geolocation = useGeolocation();
+  const [, setCoords] = useCoords();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
   const handleUseMyLocation = useCallback(async () => {
     try {
       setIsFetchingLocation(true);
-      const coords = await fetchLocation();
-      setLocation(coords);
+      const coords = await geolocation.fetch();
+      setCoords(coords);
       onClose();
     } catch (error) {
       setLocationFetchingError(error.message);
     } finally {
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, fetchLocation, setLocation, onClose]);
+  }, [setIsFetchingLocation, geolocation, setCoords, onClose]);
 
   return { isFetchingLocation, locationFetchingError, handleUseMyLocation };
 };
