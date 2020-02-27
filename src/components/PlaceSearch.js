@@ -9,26 +9,30 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
   const setLocation = useLocation.set;
   const nominatim = useNominatim();
 
-  const [isSearching, setIsSearching] = useState(false);
-  const [query, setQuery, search, abortSearch] = useDebounce(async query => {
-    const results = await nominatim.search(query);
-    setIsSearching(false);
-    setItems(results);
-  }, locationName);
-
   const [items, setItems] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleQueryChange = useCallback(
-    query => {
-      setIsSearching(true);
-      search(query);
-    },
-    [setIsSearching, search]
+  const [query, setQuery] = useDebounce(
+    useCallback(
+      async query => {
+        if (!query) return setItems([]);
+        setIsSearching(true);
+        const results = await nominatim.search(query);
+        setIsSearching(false);
+        setItems(results);
+      },
+      [nominatim, setIsSearching, setItems]
+    ),
+    locationName
   );
+
+  useEffect(() => {
+    setQuery(locationName, false);
+  }, [locationName, setQuery]);
 
   const handleItemSelect = useCallback(
     item => {
-      setQuery(item.display_name);
+      setQuery(item.display_name, false);
       setLocation({ coords: [Number(item.lon), Number(item.lat)], name: item.display_name });
       onSelectLocation();
     },
@@ -56,12 +60,6 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     isSearching
   ]);
 
-  useEffect(() => {
-    setQuery(locationName);
-  }, [locationName, setQuery]);
-
-  useEffect(() => abortSearch, [abortSearch]);
-
   return (
     <FormGroup label="Search">
       <Suggest
@@ -69,7 +67,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
         popoverProps={{ minimal: true, popoverClassName: 'suggest-dropdown-popover' }}
         inputProps={{ large: true }}
         query={query}
-        onQueryChange={handleQueryChange}
+        onQueryChange={setQuery}
         items={items}
         itemRenderer={itemRenderer}
         inputValueRenderer={inputValueRenderer}
