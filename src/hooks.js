@@ -20,7 +20,17 @@ export const useLocation = createSharedStateHook(
 
 export const useCoords = () => {
   const [location, setLocation] = useLocation();
-  return [location.coords, coords => setLocation({ coords, name: '' })];
+  return [
+    location.coords,
+    useCallback(
+      coordsOrReducer =>
+        setLocation(location => ({
+          coords: typeof coordsOrReducer === 'function' ? coordsOrReducer(location.coords) : coordsOrReducer,
+          name: ''
+        })),
+      [setLocation]
+    )
+  ];
 };
 
 export const useLocationName = () => {
@@ -114,6 +124,8 @@ export const useDebounce = (callback, initValue = '', timeout = 500) => {
   );
 
   useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
+
+  // TODO add updater effect by initialValue
 
   return [value, trigger];
 };
