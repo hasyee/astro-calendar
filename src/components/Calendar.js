@@ -1,10 +1,10 @@
 import React from 'react';
 import CalendarItem from './CalendarItem';
-import { useSelector, getDays } from '../store';
+import { useDays } from '../hooks';
 import './Calendar.scss';
 
 export default React.memo(function Calendar() {
-  const days = useSelector(getDays);
+  const days = useDays();
 
   return (
     <div className="Calendar">
