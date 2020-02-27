@@ -88,6 +88,28 @@ export const useLocalStorage = () => {
   }, [location]);
 };
 
+export const useMyLocation = onFinish => {
+  const geolocation = useGeolocation();
+  const [, setCoords] = useCoords();
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+  const [locationFetchingError, setLocationFetchingError] = useState(null);
+
+  const fetchLocation = useCallback(async () => {
+    try {
+      setIsFetchingLocation(true);
+      const coords = await geolocation.fetch();
+      setCoords(coords);
+      onFinish();
+    } catch (error) {
+      setLocationFetchingError(error.message);
+    } finally {
+      setIsFetchingLocation(false);
+    }
+  }, [setIsFetchingLocation, geolocation, setCoords, onFinish]);
+
+  return { isFetchingLocation, locationFetchingError, fetchLocation };
+};
+
 export const useDebounce = (callback, initValue = '', timeout = 500) => {
   const timer = useRef(null);
 
