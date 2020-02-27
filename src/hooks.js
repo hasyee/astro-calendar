@@ -63,7 +63,6 @@ export const useWorker = () => {
 
   useEffect(() => {
     worker.current.calc(++jobId.current, date, 1, coords);
-    //useDays.set([]);
   }, [date, coords]);
 };
 
