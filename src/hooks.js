@@ -23,7 +23,7 @@ export const useDays = createSharedStateHook([]);
 export const useCoords = createSharedSubStateHook(
   () => useLocation()[0].coords,
   coordsOrReducer =>
-    useLocation.set(location => ({
+    useLocation.setter()(location => ({
       coords: typeof coordsOrReducer === 'function' ? coordsOrReducer(location.coords) : coordsOrReducer,
       name: ''
     }))
@@ -31,7 +31,7 @@ export const useCoords = createSharedSubStateHook(
 
 export const useLocationName = createSharedSubStateHook(
   () => useLocation()[0].name,
-  name => useLocation.set(location => ({ ...location, name }))
+  name => useLocation.setter()(location => ({ ...location, name }))
 );
 
 export const useLocationShortName = () => {
@@ -53,13 +53,14 @@ export const useWorker = () => {
   const worker = useRef(Worker());
   const [date] = useDate();
   const [coords] = useCoords();
+  const setDays = useDays.setter();
 
   useEffect(() => {
     worker.current.addEventListener('message', message => {
       if (!message.data.days || message.data.jobId !== jobId.current) return;
-      useDays.set(message.data.days);
+      setDays(message.data.days);
     });
-  }, []);
+  }, [setDays]);
 
   useEffect(() => {
     worker.current.calc(++jobId.current, date, 1, coords);
@@ -94,6 +95,7 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
+  const setCoords = useCoords.setter();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
@@ -101,14 +103,14 @@ export const useMyLocation = onFinish => {
     try {
       setIsFetchingLocation(true);
       const coords = await geolocation.fetch();
-      useCoords.set(coords);
+      setCoords(coords);
       onFinish();
     } catch (error) {
       setLocationFetchingError(error.message);
     } finally {
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, geolocation, onFinish]);
+  }, [setIsFetchingLocation, geolocation, setCoords, onFinish]);
 
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };
