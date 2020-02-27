@@ -21,19 +21,14 @@ export const createSharedStateHook = initialState => {
     return [value, update];
   };
 
-  useSharedState.set = update;
+  useSharedState.setter = () => update;
 
   return useSharedState;
 };
 
 export const createSharedSubStateHook = (valueHook, set) => {
-  const subStateHook = set
-    ? (...args) => {
-        const value = valueHook();
-        return [value, set];
-      }
-    : valueHook;
-  subStateHook.set = set;
+  const subStateHook = set ? () => [valueHook(), set] : valueHook;
+  subStateHook.setter = () => set;
   return subStateHook;
 };
 
