@@ -18,11 +18,6 @@ export default React.memo(function Location({ isOpen, onClose }) {
     coords[1]
   );
 
-  useEffect(() => {
-    setLng(coords[0], false);
-    setLat(coords[1], false);
-  }, [coords, setLng, setLat]);
-
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(onClose);
 
   return (
