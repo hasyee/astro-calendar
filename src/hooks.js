@@ -134,9 +134,12 @@ export const useDebounce = (callback, initialValue = '', timeout = 500) => {
 
   useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
 
-  useEffect(() => {
-    if (value !== initialValue) setValue(initialValue);
-  }, [initialValue]);
+  useEffect(
+    useCallback(() => {
+      if (value !== initialValue) setValue(initialValue);
+    }, [value, initialValue]),
+    [initialValue]
+  );
 
   return [value, trigger];
 };

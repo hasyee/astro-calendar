@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
 import { useCoords, useDebounce, useMyLocation } from '../hooks';
@@ -28,7 +28,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Longitude">
             <NumericInput
               large
-              value={lng || ''}
+              value={lng.toString() || ''}
               onValueChange={setLng}
               fill
               min={-180}
@@ -40,7 +40,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Latitude">
             <NumericInput
               large
-              value={lat || ''}
+              value={lat.toString() || ''}
               onValueChange={setLat}
               fill
               min={-90}
