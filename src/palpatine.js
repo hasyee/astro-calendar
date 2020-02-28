@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
 
-const getOrReduceValue = (valueOrReducer, state) =>
-  typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
-
 const createStore = initialState => {
   let state = initialState;
   const listeners = new Set();
@@ -10,7 +7,7 @@ const createStore = initialState => {
   const get = () => state;
 
   const set = valueOrReducer => {
-    state = getOrReduceValue(valueOrReducer, state);
+    state = typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
     listeners.forEach(listener => listener(state));
   };
 
