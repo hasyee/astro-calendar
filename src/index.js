@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+import * as hooks from './hooks';
+import { useDevTools } from './palpatine';
 import './index.scss';
+
+useDevTools(hooks, { log: true });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
