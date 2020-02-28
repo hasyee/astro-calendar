@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+export * from './dev';
 
 const createStore = initialState => {
   let state = initialState;
@@ -28,6 +29,7 @@ const createHookByStore = ({ get, set, subscribe }) => {
 
   useSharedState.set = set;
   useSharedState.get = get;
+  useSharedState.subscribe = subscribe;
 
   return useSharedState;
 };
@@ -39,7 +41,7 @@ export const createStateHook = initialState => {
 
 export const combineSharedStateHooks = hookMap => {
   const initialState = Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {});
-  
+
   const store = createStore(initialState);
 
   const useCombinedState = createHookByStore({
