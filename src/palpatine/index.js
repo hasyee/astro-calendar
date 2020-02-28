@@ -39,18 +39,28 @@ export const createStateHook = initialState => {
   return createHookByStore(store);
 };
 
-export const combineSharedStateHooks = hookMap => {
-  const initialState = Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {});
+export const combineStateHooks = hookMap => {
+  let blockListening = false;
 
-  const store = createStore(initialState);
+  const get = () => Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {});
 
-  const useCombinedState = createHookByStore({
-    ...store,
-    set: valueOrReducer => {
-      store.set(valueOrReducer);
-      Object.keys(hookMap).forEach(key => hookMap[key].set(store.get()[key]));
-    }
-  });
+  const set = valueOrReducer => {
+    const nextState = typeof valueOrReducer === 'function' ? valueOrReducer(get()) : valueOrReducer;
+    blockListening = true;
+    Object.keys(hookMap).forEach((key, i, stateNames) => {
+      if (i === stateNames.length - 1) blockListening = false;
+      hookMap[key].set(nextState[key]);
+    });
+  };
+
+  const subscribe = listener => {
+    const unsubscribes = Object.keys(hookMap).map(key =>
+      hookMap[key].subscribe(() => !blockListening && listener(get()))
+    );
+    return () => unsubscribes.forEach(unsubscribe => unsubscribe());
+  };
+
+  const useCombinedState = createHookByStore({ get, set, subscribe });
 
   useCombinedState.isCombined = true;
 

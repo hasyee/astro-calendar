@@ -51,5 +51,5 @@ const filterSubHooks = sharedStateHooks => {
 
 const initLogger = sharedStateHooks =>
   Object.keys(sharedStateHooks).forEach(stateName =>
-    sharedStateHooks[stateName].subscribe(state => console.log(stateName, 'set', state))
+    sharedStateHooks[stateName].subscribe(state => console.log(stateName, '=', state))
   );
