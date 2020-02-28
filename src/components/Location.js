@@ -1,20 +1,21 @@
 import React, { useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useCoords, useDebounce, useMyLocation } from '../hooks';
+import { useCoords, useDebounce, useLocation, useMyLocation } from '../hooks';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
 
 export default React.memo(function Location({ isOpen, onClose }) {
-  const [coords, setCoords] = useCoords();
+  const [coords] = useCoords();
+  const setLocation = useLocation.set;
 
   const [lng, setLng] = useDebounce(
-    useCallback(value => setCoords(coords => [value, coords[1]]), [setCoords]),
+    useCallback(value => setLocation(({ coords }) => ({ coords: [value, coords[1]], name: '' })), [setLocation]),
     coords[0]
   );
 
   const [lat, setLat] = useDebounce(
-    useCallback(value => setCoords(coords => [coords[0], value]), [setCoords]),
+    useCallback(value => setLocation(({ coords }) => ({ coords: [coords[0], value], name: '' })), [setLocation]),
     coords[1]
   );
 

@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
 
-export const createSharedStateHook = initialState => {
+const getOrReduceValue = (valueOrReducer, state) =>
+  typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
+
+const createStore = initialState => {
   let state = initialState;
   const listeners = new Set();
 
-  const update = nextStateOrReducer => {
-    state = typeof nextStateOrReducer === 'function' ? nextStateOrReducer(state) : nextStateOrReducer;
+  const get = () => state;
+
+  const set = valueOrReducer => {
+    state = getOrReduceValue(valueOrReducer, state);
     listeners.forEach(listener => listener(state));
   };
 
@@ -14,25 +19,36 @@ export const createSharedStateHook = initialState => {
     return () => listeners.delete(listener);
   };
 
-  const useSharedState = () => {
-    const [value, set] = useState(state);
-    useEffect(() => subscribe(set), [set]);
+  return { get, set, subscribe };
+};
 
-    return [value, update];
+const createHookByStore = store => {
+  const useSharedState = () => {
+    const [value, setter] = useState(store.get());
+    useEffect(() => store.subscribe(setter), [setter]);
+    return [value, store.set];
   };
 
-  useSharedState.setter = () => update;
+  useSharedState.set = store.set;
+  useSharedState.get = store.get;
 
   return useSharedState;
 };
 
-export const createSharedSubStateHook = (valueHook, set) => {
-  const subStateHook = set ? () => [valueHook(), set] : valueHook;
-  subStateHook.setter = () => set;
-  return subStateHook;
+export const createStateHook = initialState => {
+  const store = createStore(initialState);
+  return createHookByStore(store);
 };
 
-export const createSharedResourceHook = resource => () => resource;
+export const combineSharedStateHooks = hookMap => {
+  const store = createStore(Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {}));
+  return createHookByStore({
+    ...store,
+    set: valueOrReducer => {
+      store.set(valueOrReducer);
+      Object.keys(hookMap).forEach(key => hookMap[key].set(store.get()[key]));
+    }
+  });
+};
 
-export const getValue = (valueOrReducer, prevValue) =>
-  typeof valueOrReducer === 'function' ? valueOrReducer(prevValue) : valueOrReducer;
+export const createResourceHook = resource => () => resource;
