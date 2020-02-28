@@ -1,38 +1,26 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { createSharedStateHook, createSharedSubStateHook, createSharedResourceHook, getValue } from './palpatine';
+import { createStateHook, createResourceHook, combineSharedStateHooks } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
-export const useDate = createSharedStateHook(
+const initialLocation = localStorage.getItem('location')
+  ? JSON.parse(localStorage.getItem('location'))
+  : {
+      coords: [19, 47],
+      name: ''
+    };
+
+export const useDate = createStateHook(
   moment()
     .startOf('month')
     .valueOf()
 );
 
-export const useLocation = createSharedStateHook(
-  localStorage.getItem('location')
-    ? JSON.parse(localStorage.getItem('location'))
-    : {
-        coords: [19, 47],
-        name: ''
-      }
-);
+export const useCoords = createStateHook(initialLocation.coords);
 
-export const useDays = createSharedStateHook([]);
+export const useLocationName = createStateHook(initialLocation.name);
 
-export const useCoords = createSharedSubStateHook(
-  () => useLocation()[0].coords,
-  coordsOrReducer =>
-    useLocation.setter()(location => ({
-      coords: getValue(coordsOrReducer, location.coords),
-      name: ''
-    }))
-);
-
-export const useLocationName = createSharedSubStateHook(
-  () => useLocation()[0].name,
-  name => useLocation.setter()(location => ({ ...location, name }))
-);
+export const useLocation = combineSharedStateHooks({ coords: useCoords, name: useLocationName });
 
 export const useLocationShortName = () => {
   const [{ name, coords }] = useLocation();
@@ -48,12 +36,14 @@ export const useLocationShortName = () => {
   );
 };
 
+export const useDays = createStateHook([]);
+
 export const useWorker = () => {
   const jobId = useRef(0);
   const worker = useRef(Worker());
   const [date] = useDate();
   const [coords] = useCoords();
-  const setDays = useDays.setter();
+  const setDays = useDays.set;
 
   useEffect(() => {
     worker.current.addEventListener('message', message => {
@@ -67,7 +57,7 @@ export const useWorker = () => {
   }, [date, coords]);
 };
 
-export const useGeolocation = createSharedResourceHook({
+export const useGeolocation = createResourceHook({
   fetch: () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(
@@ -78,7 +68,7 @@ export const useGeolocation = createSharedResourceHook({
     )
 });
 
-export const useNominatim = createSharedResourceHook({
+export const useNominatim = createResourceHook({
   search: query =>
     fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&namedetails=1`)
       .then(resp => resp.json())
@@ -95,7 +85,7 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
-  const setCoords = useCoords.setter();
+  const setLocation = useLocation.set;
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
@@ -103,14 +93,14 @@ export const useMyLocation = onFinish => {
     try {
       setIsFetchingLocation(true);
       const coords = await geolocation.fetch();
-      setCoords(coords);
+      setLocation({ coords, name: '' });
       onFinish();
     } catch (error) {
       setLocationFetchingError(error.message);
     } finally {
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, geolocation, setCoords, onFinish]);
+  }, [setIsFetchingLocation, geolocation, setLocation, onFinish]);
 
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };

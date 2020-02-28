@@ -6,7 +6,7 @@ import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
   const [locationName] = useLocationName();
-  const setLocation = useLocation.setter();
+  const setLocation = useLocation.set;
   const nominatim = useNominatim();
 
   const [items, setItems] = useState([]);
