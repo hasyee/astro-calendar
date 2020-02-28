@@ -16,7 +16,6 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     useCallback(
       async query => {
         if (!query) return setItems([]);
-
         const results = await nominatim.search(query);
         setIsSearching(false);
         setItems(results);
@@ -25,10 +24,6 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     ),
     locationName
   );
-
-  useEffect(() => {
-    setQuery(locationName, false);
-  }, [locationName, setQuery]);
 
   const handleQueryChange = useCallback(
     query => {

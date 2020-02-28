@@ -115,10 +115,10 @@ export const useMyLocation = onFinish => {
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };
 
-export const useDebounce = (callback, initValue = '', timeout = 500) => {
+export const useDebounce = (callback, initialValue = '', timeout = 500) => {
   const timer = useRef(null);
 
-  const [value, setValue] = useState(initValue);
+  const [value, setValue] = useState(initialValue);
 
   const trigger = useCallback(
     (nextValue, triggered = true) => {
@@ -133,6 +133,10 @@ export const useDebounce = (callback, initValue = '', timeout = 500) => {
   );
 
   useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
+
+  useEffect(() => {
+    if (value !== initialValue) setValue(initialValue);
+  }, [initialValue]);
 
   return [value, trigger];
 };
