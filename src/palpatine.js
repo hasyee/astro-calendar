@@ -33,3 +33,6 @@ export const createSharedSubStateHook = (valueHook, set) => {
 };
 
 export const createSharedResourceHook = resource => () => resource;
+
+export const getValue = (valueOrReducer, prevValue) =>
+  typeof valueOrReducer === 'function' ? valueOrReducer(prevValue) : valueOrReducer;

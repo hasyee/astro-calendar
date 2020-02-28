@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { createSharedStateHook, createSharedSubStateHook, createSharedResourceHook } from './palpatine';
+import { createSharedStateHook, createSharedSubStateHook, createSharedResourceHook, getValue } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export const useDate = createSharedStateHook(
@@ -24,7 +24,7 @@ export const useCoords = createSharedSubStateHook(
   () => useLocation()[0].coords,
   coordsOrReducer =>
     useLocation.setter()(location => ({
-      coords: typeof coordsOrReducer === 'function' ? coordsOrReducer(location.coords) : coordsOrReducer,
+      coords: getValue(coordsOrReducer, location.coords),
       name: ''
     }))
 );
