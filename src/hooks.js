@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { createStateHook, createResourceHook, combineSharedStateHooks } from './palpatine';
+import { createStateHook, createResourceHook, combineStateHooks } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export const useDate = createStateHook(
@@ -13,7 +13,7 @@ export const useCoords = createStateHook([19, 47]);
 
 export const useLocationName = createStateHook('');
 
-export const useLocation = combineSharedStateHooks({ coords: useCoords, name: useLocationName });
+export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName });
 
 export const useLocationShortName = () => {
   const [{ name, coords }] = useLocation();
