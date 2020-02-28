@@ -19,15 +19,15 @@ const createStore = initialState => {
   return { get, set, subscribe };
 };
 
-const createHookByStore = store => {
+const createHookByStore = ({ get, set, subscribe }) => {
   const useSharedState = () => {
-    const [value, setter] = useState(store.get());
-    useEffect(() => store.subscribe(setter), [setter]);
-    return [value, store.set];
+    const [value, setter] = useState(get());
+    useEffect(() => subscribe(setter), [setter]);
+    return [value, set];
   };
 
-  useSharedState.set = store.set;
-  useSharedState.get = store.get;
+  useSharedState.set = set;
+  useSharedState.get = get;
 
   return useSharedState;
 };
@@ -38,14 +38,21 @@ export const createStateHook = initialState => {
 };
 
 export const combineSharedStateHooks = hookMap => {
-  const store = createStore(Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {}));
-  return createHookByStore({
+  const initialState = Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {});
+  
+  const store = createStore(initialState);
+
+  const useCombinedState = createHookByStore({
     ...store,
     set: valueOrReducer => {
       store.set(valueOrReducer);
       Object.keys(hookMap).forEach(key => hookMap[key].set(store.get()[key]));
     }
   });
+
+  useCombinedState.isCombined = true;
+
+  return useCombinedState;
 };
 
 export const createResourceHook = resource => () => resource;

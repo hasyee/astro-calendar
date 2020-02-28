@@ -3,22 +3,15 @@ import moment from 'moment';
 import { createStateHook, createResourceHook, combineSharedStateHooks } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
-const initialLocation = localStorage.getItem('location')
-  ? JSON.parse(localStorage.getItem('location'))
-  : {
-      coords: [19, 47],
-      name: ''
-    };
-
 export const useDate = createStateHook(
   moment()
     .startOf('month')
     .valueOf()
 );
 
-export const useCoords = createStateHook(initialLocation.coords);
+export const useCoords = createStateHook([19, 47]);
 
-export const useLocationName = createStateHook(initialLocation.name);
+export const useLocationName = createStateHook('');
 
 export const useLocation = combineSharedStateHooks({ coords: useCoords, name: useLocationName });
 
@@ -76,7 +69,12 @@ export const useNominatim = createResourceHook({
 });
 
 export const useLocalStorage = () => {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!localStorage.getItem('location')) return;
+    setLocation(JSON.parse(localStorage.getItem('location')));
+  }, [setLocation]);
 
   useEffect(() => {
     localStorage.setItem('location', JSON.stringify(location));
