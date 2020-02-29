@@ -62,7 +62,7 @@ export const combineStateHooks = hookMap => {
 
   const useCombinedState = createHookByStore({ get, set, subscribe });
 
-  useCombinedState.isCombined = true;
+  useCombinedState.hookMap = hookMap;
 
   return useCombinedState;
 };
