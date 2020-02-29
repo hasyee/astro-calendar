@@ -7,7 +7,7 @@ export const useDevTools = (hooks, { log = false } = { log: false }) => {
 const getSharedStateHooks = hooks =>
   Object.keys(hooks)
     .filter(hookName => !!hooks[hookName].get && !!hooks[hookName].set)
-    .reduce((acc, hookName, i, hookNames) => {
+    .reduce((acc, hookName) => {
       const hook = hooks[hookName];
       const stateName = getStateName(hookName);
       return { ...acc, [stateName]: hook };
@@ -50,6 +50,7 @@ const filterSubHooks = sharedStateHooks => {
 };
 
 const initLogger = sharedStateHooks =>
-  Object.keys(sharedStateHooks).forEach(stateName =>
-    sharedStateHooks[stateName].subscribe(state => console.log(stateName, '=', state))
-  );
+  Object.keys(sharedStateHooks).forEach(stateName => {
+    if (sharedStateHooks[stateName].hookMap) return;
+    sharedStateHooks[stateName].subscribe(state => console.log(stateName, '=', state));
+  });
