@@ -1,36 +1,42 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-import { useSelector, useActions, getLocationName } from '../store';
-import { useDebounce } from '../hooks/debounce';
+import { useLocationName, useNominatim, useLocation, useDebounce } from '../hooks';
 import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const locationName = useSelector(getLocationName);
-
-  const [isSearching, setIsSearching] = useState(false);
-  const [query, setQuery, triggerDebounce] = useDebounce(async q => {
-    const results = await searchPlaces(q);
-    setIsSearching(false);
-    setItems(results);
-  }, locationName);
+  const [locationName] = useLocationName();
+  const setLocation = useLocation.set;
+  const nominatim = useNominatim();
 
   const [items, setItems] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const { searchPlaces, setLocation } = useActions();
+  const [query, setQuery] = useDebounce(
+    useCallback(
+      async query => {
+        if (!query) return setItems([]);
+        const results = await nominatim.search(query);
+        setIsSearching(false);
+        setItems(results);
+      },
+      [nominatim, setIsSearching, setItems]
+    ),
+    locationName
+  );
 
   const handleQueryChange = useCallback(
-    nextValue => {
+    query => {
       setIsSearching(true);
-      triggerDebounce(nextValue);
+      setQuery(query);
     },
-    [setIsSearching, triggerDebounce]
+    [setIsSearching, setQuery]
   );
 
   const handleItemSelect = useCallback(
-    item => {
-      setQuery(item.display_name);
-      setLocation([Number(item.lon), Number(item.lat)], item.display_name);
+    ({ display_name, lon, lat }) => {
+      setQuery(display_name, false);
+      setLocation({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
     [setQuery, setLocation, onSelectLocation]
@@ -56,10 +62,6 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     query,
     isSearching
   ]);
-
-  useEffect(() => {
-    setQuery(locationName);
-  }, [locationName, setQuery]);
 
   return (
     <FormGroup label="Search">
