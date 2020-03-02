@@ -1,12 +1,12 @@
 export const useDevTools = (hooks, { log = false } = { log: false }) => {
-  const sharedStateHooks = getSharedStateHooks(hooks);
+  const sharedStateHooks = getStateHooks(hooks);
   initGlobalObject(sharedStateHooks);
   if (log) initLogger(sharedStateHooks);
 };
 
-const getSharedStateHooks = hooks =>
+const getStateHooks = hooks =>
   Object.keys(hooks)
-    .filter(hookName => !!hooks[hookName].get && !!hooks[hookName].set)
+    .filter(hookName => !!hooks[hookName].get)
     .reduce((acc, hookName) => {
       const hook = hooks[hookName];
       const stateName = getStateName(hookName);
@@ -20,7 +20,7 @@ const getStateName = hookName => {
 
 const initGlobalObject = sharedStateHooks => {
   const topLevelHooks = filterSubHooks(sharedStateHooks);
-  const pureStateHooks = filterCombinedHooks(sharedStateHooks);
+  const pureStateHooks = getPureHooks(sharedStateHooks);
 
   const getState = hooks => {
     return Object.keys(hooks).reduce((acc, stateName) => ({ ...acc, [stateName]: hooks[stateName].get() }), {});
@@ -34,9 +34,9 @@ const initGlobalObject = sharedStateHooks => {
   };
 };
 
-const filterCombinedHooks = sharedStateHooks => {
+const getPureHooks = sharedStateHooks => {
   return Object.keys(sharedStateHooks)
-    .filter(key => !sharedStateHooks[key].hookMap)
+    .filter(key => !sharedStateHooks[key].hookMap && !sharedStateHooks[key].hookDeps)
     .reduce((acc, key) => ({ ...acc, [key]: sharedStateHooks[key] }), {});
 };
 
