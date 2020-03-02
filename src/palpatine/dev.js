@@ -52,5 +52,10 @@ const filterSubHooks = sharedStateHooks => {
 const initLogger = sharedStateHooks =>
   Object.keys(sharedStateHooks).forEach(stateName => {
     if (sharedStateHooks[stateName].hookMap) return;
-    sharedStateHooks[stateName].subscribe(state => console.log(stateName, '=', state));
+    sharedStateHooks[stateName].subscribe(state => {
+      console.log(stateName, '=', state);
+      if (window.palpatine.devtools) {
+        window.palpatine.devtools.sendLog(stateName, state);
+      }
+    });
   });

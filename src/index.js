@@ -6,7 +6,7 @@ import * as hooks from './hooks';
 import { useDevTools } from './palpatine';
 import './index.scss';
 
-useDevTools(hooks, { log: true });
+useDevTools(hooks, { log: false });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

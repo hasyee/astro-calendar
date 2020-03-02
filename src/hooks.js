@@ -9,7 +9,11 @@ export const useDate = createStateHook(
     .valueOf()
 );
 
-export const useCoords = createStateHook([19, 47]);
+export const useLng = createStateHook(19);
+
+export const useLat = createStateHook(47);
+
+export const useCoords = combineStateHooks({ lng: useLng, lat: useLat });
 
 export const useLocationName = createStateHook('');
 
@@ -24,7 +28,7 @@ export const useLocationShortName = () => {
             .split(',')
             .map(term => term.trim())
             .filter(_ => _)[0] || ''
-        : `${coords[0].toFixed(2)} ${coords[1].toFixed(2)}`,
+        : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
     [name, coords]
   );
 };
@@ -54,7 +58,7 @@ export const useGeolocation = createResourceHook({
   fetch: () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(
-        response => resolve([Number(response.coords.longitude), Number(response.coords.latitude)]),
+        response => resolve({ lng: Number(response.coords.longitude), lat: Number(response.coords.latitude) }),
         error => reject(error),
         { timeout: 10000 }
       )
