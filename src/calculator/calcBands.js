@@ -4,25 +4,25 @@ import { toPrevDay } from './time';
 
 const DAY_IN_MINS = 24 * 60;
 
-export default (days, location) => {
+export default (days, coords) => {
   const intervals = days.map(({ day }) => ({
     day,
-    ...getIntervals(day, location[1], location[0], -18)
+    ...getIntervals(day, coords.lat, coords.lng, -18)
   }));
   return days.map((day, i) => ({
     ...day,
     info: intervals[i],
     moonPhase: intervals[i].moonPhase,
     bands: {
-      night: getBandsOf(intervals, i, day.day, 'night', location),
-      astroNight: getBandsOf(intervals, i, day.day, 'astroNight', location),
-      moonlessNight: getBandsOf(intervals, i, day.day, 'moonlessNight', location)
+      night: getBandsOf(intervals, i, day.day, 'night', coords),
+      astroNight: getBandsOf(intervals, i, day.day, 'astroNight', coords),
+      moonlessNight: getBandsOf(intervals, i, day.day, 'moonlessNight', coords)
     }
   }));
 };
 
-const getBandsOf = (intervals, i, day, name, location) => {
-  return getBands(day, getIntervalOf(intervals, day, i - 1, name, location), intervals[i][name]);
+const getBandsOf = (intervals, i, day, name, coords) => {
+  return getBands(day, getIntervalOf(intervals, day, i - 1, name, coords), intervals[i][name]);
 };
 
 const getBands = (day, ...intervals) => {
@@ -35,8 +35,8 @@ const getBands = (day, ...intervals) => {
   return bands;
 };
 
-const getIntervalOf = (intervals, day, i, name, location) => {
-  return intervals[i] ? intervals[i][name] : getIntervals(toPrevDay(day), location[1], location[0], -18)[name];
+const getIntervalOf = (intervals, day, i, name, coords) => {
+  return intervals[i] ? intervals[i][name] : getIntervals(toPrevDay(day), coords.lat, coords.lng, -18)[name];
 };
 
 const forceIntervalToDay = (interval, day) => {

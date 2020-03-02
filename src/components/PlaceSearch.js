@@ -34,9 +34,9 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
   );
 
   const handleItemSelect = useCallback(
-    item => {
-      setQuery(item.display_name, false);
-      setLocation({ coords: [Number(item.lon), Number(item.lat)], name: item.display_name });
+    ({ display_name, lon, lat }) => {
+      setQuery(display_name, false);
+      setLocation({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
     [setQuery, setLocation, onSelectLocation]
