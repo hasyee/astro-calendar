@@ -20,15 +20,24 @@ const getStateName = hookName => {
 
 const initGlobalObject = sharedStateHooks => {
   const topLevelHooks = filterSubHooks(sharedStateHooks);
-  window.palpatine = {
-    sharedStateHooks,
-    getState: () => {
-      return Object.keys(topLevelHooks).reduce(
-        (acc, stateName) => ({ ...acc, [stateName]: topLevelHooks[stateName].get() }),
-        {}
-      );
-    }
+  const pureStateHooks = filterCombinedHooks(sharedStateHooks);
+
+  const getState = hooks => {
+    return Object.keys(hooks).reduce((acc, stateName) => ({ ...acc, [stateName]: hooks[stateName].get() }), {});
   };
+
+  window.palpatine = {
+    hooks: sharedStateHooks,
+    getState: () => getState(pureStateHooks),
+    getStructuredState: () => getState(topLevelHooks),
+    getAllState: () => getState(sharedStateHooks)
+  };
+};
+
+const filterCombinedHooks = sharedStateHooks => {
+  return Object.keys(sharedStateHooks)
+    .filter(key => !sharedStateHooks[key].hookMap)
+    .reduce((acc, key) => ({ ...acc, [key]: sharedStateHooks[key] }), {});
 };
 
 const filterSubHooks = sharedStateHooks => {
