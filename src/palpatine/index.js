@@ -10,6 +10,7 @@ const createStore = initialState => {
   const set = valueOrReducer => {
     state = typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
     listeners.forEach(listener => listener(state));
+    return state;
   };
 
   const subscribe = listener => {
@@ -54,6 +55,7 @@ export const combineStateHooks = (hookMap, updater) => {
       if (i === stateNames.length - 1) blockListening = false;
       hookMap[key].origSet(nextState[key]);
     });
+    return nextState;
   };
 
   const subscribe = listener => {
