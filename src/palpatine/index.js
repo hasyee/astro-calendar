@@ -22,16 +22,16 @@ const createStore = initialState => {
 };
 
 const createHookByStore = ({ get, set, subscribe, updater }) => {
-  const update = updater ? (...args) => set(updater(...args)) : set;
+  const update = set && updater ? (...args) => set(updater(...args)) : set;
 
   const useSharedState = () => {
     const [value, setter] = useState(get());
     useEffect(() => subscribe(setter), [setter]);
-    return [value, update];
+    return update ? [value, update] : value;
   };
 
-  useSharedState.origSet = set;
-  useSharedState.set = update;
+  if (set) useSharedState.origSet = set;
+  if (update) useSharedState.set = update;
   useSharedState.get = get;
   useSharedState.subscribe = subscribe;
 
@@ -70,6 +70,32 @@ export const combineStateHooks = (hookMap, updater) => {
   useCombinedState.hookMap = hookMap;
 
   return useCombinedState;
+};
+
+export const createSelectorHook = (selector, hooks) => {
+  let prevValues;
+
+  const get = () => {
+    const values = hooks.map(hook => hook.get());
+    const value = selector(...values);
+    prevValues = values;
+    return value;
+  };
+
+  const subscribe = listener => {
+    const unsubscribes = hooks.map(hook =>
+      hook.subscribe((nextValue, i) => {
+        if (nextValue !== prevValues[i]) listener(get());
+      })
+    );
+    return () => unsubscribes.forEach(unsubscribe => unsubscribe());
+  };
+
+  const useSelector = createHookByStore({ get, subscribe });
+
+  useSelector.hookDeps = hooks;
+
+  return useSelector;
 };
 
 export const createResourceHook = resource => () => resource;

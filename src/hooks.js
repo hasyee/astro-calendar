@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import moment from 'moment';
-import { createStateHook, createResourceHook, combineStateHooks } from './palpatine';
+import { createStateHook, createResourceHook, combineStateHooks, createSelectorHook } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export const useDate = createStateHook(
@@ -19,7 +19,7 @@ export const useLocationName = createStateHook('');
 
 export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName });
 
-export const useLocationShortName = () => {
+/* export const useLocationShortName = () => {
   const [{ name, coords }] = useLocation();
   return useMemo(
     () =>
@@ -31,7 +31,18 @@ export const useLocationShortName = () => {
         : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
     [name, coords]
   );
-};
+}; */
+
+export const useLocationShortName = createSelectorHook(
+  ({ name, coords }) =>
+    name
+      ? name
+          .split(',')
+          .map(term => term.trim())
+          .filter(_ => _)[0] || ''
+      : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
+  [useLocation]
+);
 
 export const useDays = createStateHook([]);
 
