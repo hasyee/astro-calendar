@@ -1,23 +1,25 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useSelector, useActions, getCoords } from '../store';
-import { useDebounce } from '../hooks/debounce';
+import { useCoords, useDebounce, useLocation, useMyLocation } from '../hooks';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
 
 export default React.memo(function Location({ isOpen, onClose }) {
-  const coords = useSelector(getCoords);
-  const { setLocation } = useActions();
-  const [lng, setLng, handleChangeLng] = useDebounce(value => setLocation([value, lat]), coords[0]);
-  const [lat, setLat, handleChangeLat] = useDebounce(value => setLocation([lng, value]), coords[1]);
+  const [coords] = useCoords();
+  const setLocation = useLocation.set;
 
-  useEffect(() => {
-    setLng(coords[0]);
-    setLat(coords[1]);
-  }, [coords, setLng, setLat]);
+  const [lng, setLng] = useDebounce(
+    useCallback(lng => setLocation(({ coords: { lat } }) => ({ coords: { lng, lat }, name: '' })), [setLocation]),
+    coords.lng
+  );
 
-  const { isFetchingLocation, locationFetchingError, handleUseMyLocation } = useMyLocation(onClose);
+  const [lat, setLat] = useDebounce(
+    useCallback(lat => setLocation(({ coords: { lng } }) => ({ coords: { lng, lat }, name: '' })), [setLocation]),
+    coords.lat
+  );
+
+  const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(onClose);
 
   return (
     <Dialog icon="locate" title="Location" isOpen={isOpen} onClose={onClose} canOutsideClickClose={!isFetchingLocation}>
@@ -27,8 +29,8 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Longitude">
             <NumericInput
               large
-              value={lng || ''}
-              onValueChange={handleChangeLng}
+              value={lng.toString() || ''}
+              onValueChange={setLng}
               fill
               min={-180}
               max={+180}
@@ -39,8 +41,8 @@ export default React.memo(function Location({ isOpen, onClose }) {
           <FormGroup label="Latitude">
             <NumericInput
               large
-              value={lat || ''}
-              onValueChange={handleChangeLat}
+              value={lat.toString() || ''}
+              onValueChange={setLat}
               fill
               min={-90}
               max={+90}
@@ -58,7 +60,7 @@ export default React.memo(function Location({ isOpen, onClose }) {
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button large onClick={handleUseMyLocation} icon={'locate'} loading={isFetchingLocation}>
+          <Button large onClick={fetchLocation} icon={'locate'} loading={isFetchingLocation}>
             USE MY LOCATION
           </Button>
         </div>
@@ -66,24 +68,3 @@ export default React.memo(function Location({ isOpen, onClose }) {
     </Dialog>
   );
 });
-
-const useMyLocation = onClose => {
-  const { fetchLocation, setLocation } = useActions();
-  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
-  const [locationFetchingError, setLocationFetchingError] = useState(null);
-
-  const handleUseMyLocation = useCallback(async () => {
-    try {
-      setIsFetchingLocation(true);
-      const coords = await fetchLocation();
-      setLocation(coords);
-      onClose();
-    } catch (error) {
-      setLocationFetchingError(error.message);
-    } finally {
-      setIsFetchingLocation(false);
-    }
-  }, [setIsFetchingLocation, fetchLocation, setLocation, onClose]);
-
-  return { isFetchingLocation, locationFetchingError, handleUseMyLocation };
-};
