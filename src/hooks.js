@@ -46,6 +46,35 @@ export const useLocationShortName = createSelectorHook(
 
 export const useDays = createStateHook([]);
 
+export const useDebounce = (callback, initialValue = '', timeout = 500) => {
+  const timer = useRef(null);
+
+  const [value, setValue] = useState(initialValue);
+
+  const trigger = useCallback(
+    (nextValue, triggered = true) => {
+      setValue(nextValue);
+      if (!triggered) return;
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        callback(nextValue);
+      }, timeout);
+    },
+    [timer, timeout, callback]
+  );
+
+  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
+
+  useEffect(
+    useCallback(() => {
+      if (value !== initialValue) setValue(initialValue);
+    }, [value, initialValue]),
+    [initialValue]
+  );
+
+  return [value, trigger];
+};
+
 export const useWorker = () => {
   const jobId = useRef(0);
   const worker = useRef(Worker());
@@ -118,31 +147,33 @@ export const useMyLocation = onFinish => {
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };
 
-export const useDebounce = (callback, initialValue = '', timeout = 500) => {
-  const timer = useRef(null);
+export const useSearch = () => {
+  const [locationName] = useLocationName();
+  const nominatim = useNominatim();
 
-  const [value, setValue] = useState(initialValue);
+  const [items, setItems] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const trigger = useCallback(
-    (nextValue, triggered = true) => {
-      setValue(nextValue);
-      if (!triggered) return;
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        callback(nextValue);
-      }, timeout);
+  const [query, setQuery] = useDebounce(
+    useCallback(
+      async query => {
+        if (!query) return setItems([]);
+        const results = await nominatim.search(query);
+        setIsSearching(false);
+        setItems(results);
+      },
+      [nominatim, setIsSearching, setItems]
+    ),
+    locationName
+  );
+
+  const handleQueryChange = useCallback(
+    query => {
+      setIsSearching(true);
+      setQuery(query);
     },
-    [timer, timeout, callback]
+    [setIsSearching, setQuery]
   );
 
-  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
-
-  useEffect(
-    useCallback(() => {
-      if (value !== initialValue) setValue(initialValue);
-    }, [value, initialValue]),
-    [initialValue]
-  );
-
-  return [value, trigger];
+  return { query, handleQueryChange, items, isSearching };
 };
