@@ -23,7 +23,7 @@ export const useLocationShortName = createSelectorHook(
       ? name
           .split(',')
           .map(term => term.trim())
-          .filter(_ => _)[0] || ''
+          .filter(_ => _)[0] || `${lng.toFixed(2)} ${lat.toFixed(2)}`
       : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
   [useLng, useLat, useLocationName]
 );
