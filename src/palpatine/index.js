@@ -21,26 +21,29 @@ const createStore = initialState => {
   return { get, set, subscribe };
 };
 
-const createHookByStore = ({ get, set, subscribe }) => {
+const createHookByStore = ({ get, set, subscribe, updater }) => {
+  const update = set && updater ? (...args) => set(updater(...args)) : set;
+
   const useSharedState = () => {
     const [value, setter] = useState(get());
     useEffect(() => subscribe(setter), [setter]);
-    return [value, set];
+    return update ? [value, update] : value;
   };
 
-  useSharedState.set = set;
+  if (set) useSharedState.origSet = set;
+  if (update) useSharedState.set = update;
   useSharedState.get = get;
   useSharedState.subscribe = subscribe;
 
   return useSharedState;
 };
 
-export const createStateHook = initialState => {
+export const createStateHook = (initialState, updater) => {
   const store = createStore(initialState);
-  return createHookByStore(store);
+  return createHookByStore({ ...store, updater });
 };
 
-export const combineStateHooks = hookMap => {
+export const combineStateHooks = (hookMap, updater) => {
   let blockListening = false;
 
   const get = () => Object.keys(hookMap).reduce((acc, key) => ({ ...acc, [key]: hookMap[key].get() }), {});
@@ -50,7 +53,7 @@ export const combineStateHooks = hookMap => {
     blockListening = true;
     Object.keys(hookMap).forEach((key, i, stateNames) => {
       if (i === stateNames.length - 1) blockListening = false;
-      hookMap[key].set(nextState[key]);
+      hookMap[key].origSet(nextState[key]);
     });
     return nextState;
   };
@@ -62,11 +65,37 @@ export const combineStateHooks = hookMap => {
     return () => unsubscribes.forEach(unsubscribe => unsubscribe());
   };
 
-  const useCombinedState = createHookByStore({ get, set, subscribe });
+  const useCombinedState = createHookByStore({ get, set, subscribe, updater });
 
   useCombinedState.hookMap = hookMap;
 
   return useCombinedState;
+};
+
+export const createSelectorHook = (selector, hooks) => {
+  let prevValues;
+
+  const get = () => {
+    const values = hooks.map(hook => hook.get());
+    const value = selector(...values);
+    prevValues = values;
+    return value;
+  };
+
+  const subscribe = listener => {
+    const unsubscribes = hooks.map(hook =>
+      hook.subscribe((nextValue, i) => {
+        if (nextValue !== prevValues[i]) listener(get());
+      })
+    );
+    return () => unsubscribes.forEach(unsubscribe => unsubscribe());
+  };
+
+  const useSelector = createHookByStore({ get, subscribe });
+
+  useSelector.hookDeps = hooks;
+
+  return useSelector;
 };
 
 export const createResourceHook = resource => () => resource;

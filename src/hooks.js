@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import moment from 'moment';
-import { createStateHook, createResourceHook, combineStateHooks } from './palpatine';
+import { createStateHook, createResourceHook, combineStateHooks, createSelectorHook } from './palpatine';
 import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export const useDate = createStateHook(
@@ -19,7 +19,7 @@ export const useLocationName = createStateHook('');
 
 export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName });
 
-export const useLocationShortName = () => {
+/* export const useLocationShortName = () => {
   const [{ name, coords }] = useLocation();
   return useMemo(
     () =>
@@ -31,9 +31,49 @@ export const useLocationShortName = () => {
         : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
     [name, coords]
   );
-};
+}; */
+
+export const useLocationShortName = createSelectorHook(
+  (lng, lat, name) =>
+    name
+      ? name
+          .split(',')
+          .map(term => term.trim())
+          .filter(_ => _)[0] || ''
+      : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
+  [useLng, useLat, useLocationName]
+);
 
 export const useDays = createStateHook([]);
+
+export const useDebounce = (callback, initialValue = '', timeout = 500) => {
+  const timer = useRef(null);
+
+  const [value, setValue] = useState(initialValue);
+
+  const trigger = useCallback(
+    (nextValue, triggered = true) => {
+      setValue(nextValue);
+      if (!triggered) return;
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        callback(nextValue);
+      }, timeout);
+    },
+    [timer, timeout, callback]
+  );
+
+  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
+
+  useEffect(
+    useCallback(() => {
+      if (value !== initialValue) setValue(initialValue);
+    }, [value, initialValue]),
+    [initialValue]
+  );
+
+  return [value, trigger];
+};
 
 export const useWorker = () => {
   const jobId = useRef(0);
@@ -107,31 +147,33 @@ export const useMyLocation = onFinish => {
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };
 
-export const useDebounce = (callback, initialValue = '', timeout = 500) => {
-  const timer = useRef(null);
+export const useSearch = () => {
+  const [locationName] = useLocationName();
+  const nominatim = useNominatim();
 
-  const [value, setValue] = useState(initialValue);
+  const [items, setItems] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const trigger = useCallback(
-    (nextValue, triggered = true) => {
-      setValue(nextValue);
-      if (!triggered) return;
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        callback(nextValue);
-      }, timeout);
+  const [query, setQuery] = useDebounce(
+    useCallback(
+      async query => {
+        if (!query) return setItems([]);
+        const results = await nominatim.search(query);
+        setIsSearching(false);
+        setItems(results);
+      },
+      [nominatim, setIsSearching, setItems]
+    ),
+    locationName
+  );
+
+  const handleQueryChange = useCallback(
+    query => {
+      setIsSearching(true);
+      setQuery(query);
     },
-    [timer, timeout, callback]
+    [setIsSearching, setQuery]
   );
 
-  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
-
-  useEffect(
-    useCallback(() => {
-      if (value !== initialValue) setValue(initialValue);
-    }, [value, initialValue]),
-    [initialValue]
-  );
-
-  return [value, trigger];
+  return { query, handleQueryChange, items, isSearching };
 };
