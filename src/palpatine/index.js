@@ -102,3 +102,5 @@ export const createSelectorHook = (selector, hooks) => {
 export const createResourceHook = resource => () => resource;
 
 export const deepMergeUpdater = diff => state => deepMerge(state, diff);
+
+export const shallowMergeUpdater = diff => state => ({ ...state, ...diff });
