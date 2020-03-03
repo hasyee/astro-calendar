@@ -1,45 +1,19 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-import { useLocationName, useNominatim, useLocation, useDebounce } from '../hooks';
+import { useLocation, useSearch } from '../hooks';
 import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const [locationName] = useLocationName();
   const setLocation = useLocation.set;
-  const nominatim = useNominatim();
-
-  const [items, setItems] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-
-  const [query, setQuery] = useDebounce(
-    useCallback(
-      async query => {
-        if (!query) return setItems([]);
-        const results = await nominatim.search(query);
-        setIsSearching(false);
-        setItems(results);
-      },
-      [nominatim, setIsSearching, setItems]
-    ),
-    locationName
-  );
-
-  const handleQueryChange = useCallback(
-    query => {
-      setIsSearching(true);
-      setQuery(query);
-    },
-    [setIsSearching, setQuery]
-  );
+  const { query, handleQueryChange, items, isSearching } = useSearch();
 
   const handleItemSelect = useCallback(
     ({ display_name, lon, lat }) => {
-      setQuery(display_name, false);
       setLocation({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
-    [setQuery, setLocation, onSelectLocation]
+    [setLocation, onSelectLocation]
   );
 
   const itemRenderer = useCallback(
