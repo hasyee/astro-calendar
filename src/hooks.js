@@ -34,14 +34,14 @@ export const useLocation = combineStateHooks({ coords: useCoords, name: useLocat
 }; */
 
 export const useLocationShortName = createSelectorHook(
-  ({ name, coords }) =>
+  (lng, lat, name) =>
     name
       ? name
           .split(',')
           .map(term => term.trim())
           .filter(_ => _)[0] || ''
-      : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
-  [useLocation]
+      : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
+  [useLng, useLat, useLocationName]
 );
 
 export const useDays = createStateHook([]);
