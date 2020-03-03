@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { createStateHook, combineStateHooks, createSelectorHook } from '../palpatine';
+import { createStateHook, combineStateHooks, createSelectorHook, deepMergeUpdater } from '../palpatine';
 
 export const useDate = createStateHook(
   moment()
@@ -15,16 +15,7 @@ export const useCoords = combineStateHooks({ lng: useLng, lat: useLat });
 
 export const useLocationName = createStateHook('');
 
-export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, diff => state => ({
-  ...state,
-  ...diff,
-  coords: diff.coords
-    ? {
-        ...state.coords,
-        ...diff.coords
-      }
-    : state.coords
-}));
+export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, deepMergeUpdater);
 
 export const useLocationShortName = createSelectorHook(
   (lng, lat, name) =>
