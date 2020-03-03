@@ -17,21 +17,16 @@ export const useCoords = combineStateHooks({ lng: useLng, lat: useLat });
 
 export const useLocationName = createStateHook('');
 
-export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName });
-
-/* export const useLocationShortName = () => {
-  const [{ name, coords }] = useLocation();
-  return useMemo(
-    () =>
-      name
-        ? name
-            .split(',')
-            .map(term => term.trim())
-            .filter(_ => _)[0] || ''
-        : `${coords.lng.toFixed(2)} ${coords.lat.toFixed(2)}`,
-    [name, coords]
-  );
-}; */
+export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, diff => state => ({
+  ...state,
+  ...diff,
+  coords: diff.coords
+    ? {
+        ...state.coords,
+        ...diff.coords
+      }
+    : state.coords
+}));
 
 export const useLocationShortName = createSelectorHook(
   (lng, lat, name) =>
@@ -46,7 +41,7 @@ export const useLocationShortName = createSelectorHook(
 
 export const useDays = createStateHook([]);
 
-export const useDebounce = (callback, initialValue = '', timeout = 500) => {
+export const useDebounce = (initialValue, callback, timeout = 500) => {
   const timer = useRef(null);
 
   const [value, setValue] = useState(initialValue);
@@ -135,6 +130,7 @@ export const useMyLocation = onFinish => {
     try {
       setIsFetchingLocation(true);
       const coords = await geolocation.fetch();
+      setLocationFetchingError(null);
       setLocation({ coords, name: '' });
       onFinish();
     } catch (error) {
@@ -155,6 +151,7 @@ export const useSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const [query, setQuery] = useDebounce(
+    locationName,
     useCallback(
       async query => {
         if (!query) return setItems([]);
@@ -163,8 +160,7 @@ export const useSearch = () => {
         setItems(results);
       },
       [nominatim, setIsSearching, setItems]
-    ),
-    locationName
+    )
   );
 
   const handleQueryChange = useCallback(
