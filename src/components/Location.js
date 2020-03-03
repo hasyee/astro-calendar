@@ -10,13 +10,13 @@ export default React.memo(function Location({ isOpen, onClose }) {
   const setLocation = useLocation.set;
 
   const [lng, setLng] = useDebounce(
-    useCallback(lng => setLocation(({ coords: { lat } }) => ({ coords: { lng, lat }, name: '' })), [setLocation]),
-    coords.lng
+    coords.lng,
+    useCallback(lng => setLocation({ coords: { lng }, name: '' }), [setLocation])
   );
 
   const [lat, setLat] = useDebounce(
-    useCallback(lat => setLocation(({ coords: { lng } }) => ({ coords: { lng, lat }, name: '' })), [setLocation]),
-    coords.lat
+    coords.lat,
+    useCallback(lat => setLocation({ coords: { lat }, name: '' }), [setLocation])
   );
 
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(onClose);
