@@ -1,74 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import moment from 'moment';
-import { createStateHook, createResourceHook, combineStateHooks, createSelectorHook } from './palpatine';
-import Worker from 'workerize-loader!./worker'; // eslint-disable-line import/no-webpack-loader-syntax
-
-export const useDate = createStateHook(
-  moment()
-    .startOf('month')
-    .valueOf()
-);
-
-export const useLng = createStateHook(19);
-
-export const useLat = createStateHook(47);
-
-export const useCoords = combineStateHooks({ lng: useLng, lat: useLat });
-
-export const useLocationName = createStateHook('');
-
-export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, diff => state => ({
-  ...state,
-  ...diff,
-  coords: diff.coords
-    ? {
-        ...state.coords,
-        ...diff.coords
-      }
-    : state.coords
-}));
-
-export const useLocationShortName = createSelectorHook(
-  (lng, lat, name) =>
-    name
-      ? name
-          .split(',')
-          .map(term => term.trim())
-          .filter(_ => _)[0] || ''
-      : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
-  [useLng, useLat, useLocationName]
-);
-
-export const useDays = createStateHook([]);
-
-export const useDebounce = (initialValue, callback, timeout = 500) => {
-  const timer = useRef(null);
-
-  const [value, setValue] = useState(initialValue);
-
-  const trigger = useCallback(
-    (nextValue, triggered = true) => {
-      setValue(nextValue);
-      if (!triggered) return;
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        callback(nextValue);
-      }, timeout);
-    },
-    [timer, timeout, callback]
-  );
-
-  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
-
-  useEffect(
-    useCallback(() => {
-      if (value !== initialValue) setValue(initialValue);
-    }, [value, initialValue]),
-    [initialValue]
-  );
-
-  return [value, trigger];
-};
+import { createResourceHook } from '../palpatine';
+import Worker from 'workerize-loader!../worker'; // eslint-disable-line import/no-webpack-loader-syntax
+import { useDate, useCoords, useDays, useLocation, useLocationName } from './state';
+import { useDebounce } from './helpers';
 
 export const useWorker = () => {
   const jobId = useRef(0);
