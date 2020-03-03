@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import deepMerge from 'deepmerge';
 export * from './dev';
 
 const createStore = initialState => {
@@ -99,3 +100,5 @@ export const createSelectorHook = (selector, hooks) => {
 };
 
 export const createResourceHook = resource => () => resource;
+
+export const deepMergeUpdater = diff => state => deepMerge(state, diff);
