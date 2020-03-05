@@ -1,7 +1,10 @@
-export const useDevTools = (hooks, { log = false } = { log: false }) => {
+export const useDevTools = (
+  hooks,
+  { log = false, logPrimitivesOnly = true } = { log: false, logPrimitivesOnly: true }
+) => {
   const sharedStateHooks = getStateHooks(hooks);
   initGlobalObject(sharedStateHooks);
-  if (log) initLogger(sharedStateHooks);
+  if (log) initLogger(sharedStateHooks, logPrimitivesOnly);
 };
 
 const getStateHooks = hooks =>
@@ -58,9 +61,10 @@ const filterSubHooks = sharedStateHooks => {
   }, {});
 };
 
-const initLogger = sharedStateHooks =>
+const initLogger = (sharedStateHooks, primitivesOnly = true) =>
   Object.keys(sharedStateHooks).forEach(stateName => {
-    if (sharedStateHooks[stateName].hookMap) return;
+    const isComplex = sharedStateHooks[stateName].hookMap || sharedStateHooks[stateName].hookDeps;
+    if (primitivesOnly && isComplex) return;
     sharedStateHooks[stateName].subscribe(state => {
       console.log(stateName, '=', state);
       if (window.palpatine.devtools) {
