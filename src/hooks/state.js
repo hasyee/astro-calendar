@@ -18,14 +18,14 @@ export const useLocationName = createStateHook('');
 export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, deepMergeUpdater);
 
 export const useLocationShortName = createSelectorHook(
-  (lng, lat, name) =>
+  ({ coords: { lng, lat }, name }) =>
     name
       ? name
           .split(',')
           .map(term => term.trim())
           .filter(_ => _)[0] || `${lng.toFixed(2)} ${lat.toFixed(2)}`
       : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
-  [useLng, useLat, useLocationName]
+  [useLocation]
 );
 
 export const useDays = createStateHook([]);

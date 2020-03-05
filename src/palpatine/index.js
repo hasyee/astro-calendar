@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import deepMerge from 'deepmerge';
+export * from './updaters';
 export * from './dev';
 
 const createStore = initialState => {
@@ -9,8 +9,11 @@ const createStore = initialState => {
   const get = () => state;
 
   const set = valueOrReducer => {
-    state = typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
-    listeners.forEach(listener => listener(state));
+    const nextState = typeof valueOrReducer === 'function' ? valueOrReducer(state) : valueOrReducer;
+    if (state !== nextState) {
+      state = nextState;
+      listeners.forEach(listener => listener(state));
+    }
     return state;
   };
 
@@ -51,9 +54,14 @@ export const combineStateHooks = (hookMap, updater) => {
 
   const set = valueOrReducer => {
     const nextState = typeof valueOrReducer === 'function' ? valueOrReducer(get()) : valueOrReducer;
+    const lastModifiedHookIndex = Object.keys(hookMap).reduce(
+      (lastIndex, key, index) => (hookMap[key].get() !== nextState[key] ? index : lastIndex),
+      -1
+    );
+    if (lastModifiedHookIndex === -1) return nextState;
     blockListening = true;
-    Object.keys(hookMap).forEach((key, i, stateNames) => {
-      if (i === stateNames.length - 1) blockListening = false;
+    Object.keys(hookMap).forEach((key, i) => {
+      if (i === lastModifiedHookIndex) blockListening = false;
       hookMap[key].origSet(nextState[key]);
     });
     return nextState;
@@ -73,18 +81,18 @@ export const combineStateHooks = (hookMap, updater) => {
   return useCombinedState;
 };
 
-export const createSelectorHook = (selector, hooks) => {
+export const createSelectorHook = (selector, hookDeps) => {
   let prevValues;
 
   const get = () => {
-    const values = hooks.map(hook => hook.get());
+    const values = hookDeps.map(hook => hook.get());
     const value = selector(...values);
     prevValues = values;
     return value;
   };
 
   const subscribe = listener => {
-    const unsubscribes = hooks.map(hook =>
+    const unsubscribes = hookDeps.map(hook =>
       hook.subscribe((nextValue, i) => {
         if (nextValue !== prevValues[i]) listener(get());
       })
@@ -94,13 +102,9 @@ export const createSelectorHook = (selector, hooks) => {
 
   const useSelector = createHookByStore({ get, subscribe });
 
-  useSelector.hookDeps = hooks;
+  useSelector.hookDeps = hookDeps;
 
   return useSelector;
 };
 
 export const createResourceHook = resource => () => resource;
-
-export const deepMergeUpdater = diff => state => deepMerge(state, diff);
-
-export const shallowMergeUpdater = diff => state => ({ ...state, ...diff });
