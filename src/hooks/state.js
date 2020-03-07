@@ -1,5 +1,5 @@
 import moment from 'moment';
-import io, { deepMergeUpdater } from 'use.io';
+import io from 'use.io';
 
 export const useDate = io(
   moment()
@@ -15,7 +15,7 @@ export const useCoords = io.compose({ lng: useLng, lat: useLat });
 
 export const useLocationName = io('');
 
-export const useLocation = io.compose({ coords: useCoords, name: useLocationName }, deepMergeUpdater);
+export const useLocation = io.compose({ coords: useCoords, name: useLocationName }, io.deepMergeUpdater);
 
 export const useLocationShortName = io.select(
   ({ coords: { lng, lat }, name }) =>
