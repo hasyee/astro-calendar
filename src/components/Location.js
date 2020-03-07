@@ -7,7 +7,7 @@ import './Location.scss';
 
 export default React.memo(function Location({ isOpen, onClose }) {
   const [coords] = useCoords();
-  const setLocation = useLocation.set;
+  const [, setLocation] = useLocation(false);
 
   const [lng, setLng] = useDebounce(
     coords.lng,

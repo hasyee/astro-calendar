@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { createResourceHook } from '../palpatine';
+import io from 'use.io';
 import Worker from 'workerize-loader!../worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { useDate, useCoords, useDays, useLocation, useLocationName } from './state';
 import { useDebounce } from './helpers';
@@ -9,7 +9,7 @@ export const useWorker = () => {
   const worker = useRef(Worker());
   const [date] = useDate();
   const [coords] = useCoords();
-  const setDays = useDays.set;
+  const [, setDays] = useDays(false);
 
   useEffect(() => {
     worker.current.addEventListener('message', message => {
@@ -23,7 +23,7 @@ export const useWorker = () => {
   }, [date, coords]);
 };
 
-export const useGeolocation = createResourceHook({
+export const useGeolocation = io.constant({
   fetch: () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(
@@ -34,7 +34,7 @@ export const useGeolocation = createResourceHook({
     )
 });
 
-export const useNominatim = createResourceHook({
+export const useNominatim = io.constant({
   search: query =>
     fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&namedetails=1`)
       .then(resp => resp.json())
@@ -56,7 +56,7 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
-  const setLocation = useLocation.set;
+  const [, setLocation] = useLocation(false);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
