@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import * as hooks from './hooks';
-import { useDevTools } from './palpatine';
+import { useDevTools } from 'use.io';
 import './index.scss';
 
-useDevTools(hooks, { log: true, logPrimitivesOnly: false });
+useDevTools(hooks, { log: false, logPrimitivesOnly: false });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
