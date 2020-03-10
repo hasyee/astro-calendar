@@ -17,7 +17,7 @@ export const useLocationName = io.state('');
 
 export const useLocation = io.compose({ coords: useCoords, name: useLocationName }, io.deepMergeUpdater);
 
-export const useLocationShortName = io.select(
+export const useLocationShortName = io.memo(
   ({ coords: { lng, lat }, name }) =>
     name
       ? name
