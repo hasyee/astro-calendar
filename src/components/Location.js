@@ -1,31 +1,20 @@
 import React, { Fragment, useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useCoords, useDebounce, useLocation, useMyLocation, useLocationShortName } from '../hooks';
+import { useLocation, useMyLocation, useLocationShortName } from '../hooks';
 import PlaceSearch from './PlaceSearch';
 import './Location.scss';
 
 export default React.memo(function Location() {
+  const locationShortName = useLocationShortName();
+  const [location, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = useCallback(() => setIsOpen(true), []);
   const handleClose = useCallback(() => setIsOpen(false), []);
-
-  const locationShortName = useLocationShortName();
-
-  const [coords] = useCoords();
-  const [, setLocation] = useLocation(false);
-
-  const [lng, setLng] = useDebounce(
-    coords.lng,
-    useCallback(lng => setLocation({ coords: { lng }, name: '' }), [setLocation])
-  );
-
-  const [lat, setLat] = useDebounce(
-    coords.lat,
-    useCallback(lat => setLocation({ coords: { lat }, name: '' }), [setLocation])
-  );
-
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(handleClose);
+
+  const handleLngChange = useCallback(lng => setLocation({ coords: { lng }, name: '' }), [setLocation]);
+  const handleLatChange = useCallback(lat => setLocation({ coords: { lat }, name: '' }), [setLocation]);
 
   return (
     <Fragment>
@@ -46,8 +35,8 @@ export default React.memo(function Location() {
             <FormGroup label="Longitude">
               <NumericInput
                 large
-                value={lng.toString() || ''}
-                onValueChange={setLng}
+                value={location.coords.lng.toString() || ''}
+                onValueChange={handleLngChange}
                 fill
                 min={-180}
                 max={+180}
@@ -58,8 +47,8 @@ export default React.memo(function Location() {
             <FormGroup label="Latitude">
               <NumericInput
                 large
-                value={lat.toString() || ''}
-                onValueChange={setLat}
+                value={location.coords.lat.toString() || ''}
+                onValueChange={handleLatChange}
                 fill
                 min={-90}
                 max={+90}

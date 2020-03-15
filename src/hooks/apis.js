@@ -63,13 +63,13 @@ export const useMyLocation = onFinish => {
   const fetchLocation = useCallback(async () => {
     try {
       setIsFetchingLocation(true);
-      const coords = await geolocation.fetch();
       setLocationFetchingError(null);
+      const coords = await geolocation.fetch();
       setLocation({ coords, name: '' });
+      setIsFetchingLocation(false);
       onFinish();
     } catch (error) {
       setLocationFetchingError(error.message);
-    } finally {
       setIsFetchingLocation(false);
     }
   }, [setIsFetchingLocation, geolocation, setLocation, onFinish]);
