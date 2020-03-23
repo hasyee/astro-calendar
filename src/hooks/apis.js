@@ -1,29 +1,26 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { createResourceHook } from '../palpatine';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Worker from 'workerize-loader!../worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { useDate, useCoords, useDays, useLocation, useLocationName } from './state';
 import { useDebounce } from './helpers';
 
+const constant = r => () => r;
+
 export const useWorker = () => {
   const jobId = useRef(0);
-  const worker = useRef(Worker());
-  const [date] = useDate();
-  const [coords] = useCoords();
-  const setDays = useDays.set;
+  const worker = useMemo(() => Worker(), []);
+  const { current: date } = useDate();
+  const { current: coords } = useCoords();
+  const days = useDays();
 
   useEffect(() => {
-    worker.current.addEventListener('message', message => {
-      if (!message.data.days || message.data.jobId !== jobId.current) return;
-      setDays(message.data.days);
+    worker.calc(++jobId.current, date, 1, coords).then(result => {
+      if (!result.days || result.jobId !== jobId.current) return;
+      days.set(result.days);
     });
-  }, [setDays]);
-
-  useEffect(() => {
-    worker.current.calc(++jobId.current, date, 1, coords);
-  }, [date, coords]);
+  }, [worker, date, coords, days]);
 };
 
-export const useGeolocation = createResourceHook({
+export const useGeolocation = constant({
   fetch: () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(
@@ -34,7 +31,7 @@ export const useGeolocation = createResourceHook({
     )
 });
 
-export const useNominatim = createResourceHook({
+export const useNominatim = constant({
   search: query =>
     fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&namedetails=1`)
       .then(resp => resp.json())
@@ -42,7 +39,7 @@ export const useNominatim = createResourceHook({
 });
 
 export const useLocalStorage = () => {
-  const [location, setLocation] = useLocation();
+  const { current: location, set: setLocation } = useLocation();
 
   useEffect(() => {
     if (!localStorage.getItem('location')) return;
@@ -56,36 +53,36 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
-  const setLocation = useLocation.set;
+  const location = useLocation();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
   const fetchLocation = useCallback(async () => {
     try {
       setIsFetchingLocation(true);
-      const coords = await geolocation.fetch();
       setLocationFetchingError(null);
-      setLocation({ coords, name: '' });
+      const coords = await geolocation.fetch();
+      location.set({ coords, name: '' });
+      setIsFetchingLocation(false);
       onFinish();
     } catch (error) {
       setLocationFetchingError(error.message);
-    } finally {
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, geolocation, setLocation, onFinish]);
+  }, [setIsFetchingLocation, geolocation, location, onFinish]);
 
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };
 
 export const useSearch = () => {
-  const [locationName] = useLocationName();
+  const locationName = useLocationName();
   const nominatim = useNominatim();
 
   const [items, setItems] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const [query, setQuery] = useDebounce(
-    locationName,
+    locationName.current,
     useCallback(
       async query => {
         if (!query) return setItems([]);

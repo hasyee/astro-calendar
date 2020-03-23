@@ -1,31 +1,17 @@
-import moment from 'moment';
-import { createStateHook, combineStateHooks, createSelectorHook, deepMergeUpdater } from '../palpatine';
+import { date, lng, lat, coords, locationName, location, locationShortName, days } from '../state';
 
-export const useDate = createStateHook(
-  moment()
-    .startOf('month')
-    .valueOf()
-);
+export const useDate = date.hook();
 
-export const useLng = createStateHook(19);
+export const useLng = lng.hook();
 
-export const useLat = createStateHook(47);
+export const useLat = lat.hook();
 
-export const useCoords = combineStateHooks({ lng: useLng, lat: useLat });
+export const useCoords = coords.hook();
 
-export const useLocationName = createStateHook('');
+export const useLocationName = locationName.hook();
 
-export const useLocation = combineStateHooks({ coords: useCoords, name: useLocationName }, deepMergeUpdater);
+export const useLocation = location.hook();
 
-export const useLocationShortName = createSelectorHook(
-  ({ coords: { lng, lat }, name }) =>
-    name
-      ? name
-          .split(',')
-          .map(term => term.trim())
-          .filter(_ => _)[0] || `${lng.toFixed(2)} ${lat.toFixed(2)}`
-      : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
-  [useLocation]
-);
+export const useLocationShortName = locationShortName.hook();
 
-export const useDays = createStateHook([]);
+export const useDays = days.hook();

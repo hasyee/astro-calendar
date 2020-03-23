@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react';
 
 export const useDebounce = (initialValue, callback, timeout = 500) => {
   const timer = useRef(null);
@@ -19,7 +19,7 @@ export const useDebounce = (initialValue, callback, timeout = 500) => {
 
   useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
 
-  useEffect(
+  useLayoutEffect(
     useCallback(() => {
       if (value !== initialValue) setValue(initialValue);
     }, [value, initialValue]),
