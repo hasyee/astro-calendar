@@ -5,31 +5,31 @@ import { useDate } from '../hooks';
 import './DateControl.scss';
 
 export default React.memo(function DateControls() {
-  const [date, setDate] = useDate();
+  const date = useDate();
   const updateMonth = useCallback(
     value =>
-      setDate(
-        moment(date)
+      date.set(
+        moment(date.current)
           .add(value, 'months')
           .valueOf()
       ),
-    [date, setDate]
+    [date]
   );
   const handlePrevMonth = useCallback(() => updateMonth(-1), [updateMonth]);
   const handleNextMonth = useCallback(() => updateMonth(+1), [updateMonth]);
   const handleThisMonth = useCallback(
     () =>
-      setDate(
+      date.set(
         moment()
           .startOf('day')
           .valueOf()
       ),
-    [setDate]
+    [date]
   );
 
   return (
     <div className="DateControls">
-      <div className="current-date">{moment(date).format('MMMM YYYY')}</div>
+      <div className="current-date">{moment(date.current).format('MMMM YYYY')}</div>
       <Button onClick={handlePrevMonth} large>
         «
       </Button>

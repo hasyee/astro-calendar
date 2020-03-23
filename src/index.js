@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import * as hooks from './hooks';
+import * as state from './state';
 import { useDevTools } from 'use.io';
 import './index.scss';
 
-useDevTools(hooks, { log: false, logPrimitivesOnly: false });
+useDevTools(state, { log: false, logPrimitivesOnly: false });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

@@ -1,31 +1,17 @@
-import moment from 'moment';
-import io from 'use.io';
+import { date, lng, lat, coords, locationName, location, locationShortName, days } from '../state';
 
-export const useDate = io.state(
-  moment()
-    .startOf('month')
-    .valueOf()
-);
+export const useDate = date.hook();
 
-export const useLng = io.state(19);
+export const useLng = lng.hook();
 
-export const useLat = io.state(47);
+export const useLat = lat.hook();
 
-export const useCoords = io.compose({ lng: useLng, lat: useLat });
+export const useCoords = coords.hook();
 
-export const useLocationName = io.state('');
+export const useLocationName = locationName.hook();
 
-export const useLocation = io.compose({ coords: useCoords, name: useLocationName }, io.deepMergeUpdater);
+export const useLocation = location.hook();
 
-export const useLocationShortName = io.memo(
-  ({ coords: { lng, lat }, name }) =>
-    name
-      ? name
-          .split(',')
-          .map(term => term.trim())
-          .filter(_ => _)[0] || `${lng.toFixed(2)} ${lat.toFixed(2)}`
-      : `${lng.toFixed(2)} ${lat.toFixed(2)}`,
-  [useLocation]
-);
+export const useLocationShortName = locationShortName.hook();
 
-export const useDays = io.state([]);
+export const useDays = days.hook();

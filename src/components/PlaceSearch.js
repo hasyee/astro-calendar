@@ -5,15 +5,15 @@ import { useLocation, useSearch } from '../hooks';
 import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const [, setLocation] = useLocation(false);
+  const location = useLocation();
   const { query, handleQueryChange, items, isSearching } = useSearch();
 
   const handleItemSelect = useCallback(
     ({ display_name, lon, lat }) => {
-      setLocation({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
+      location.set({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
-    [setLocation, onSelectLocation]
+    [location, onSelectLocation]
   );
 
   const itemRenderer = useCallback(
