@@ -13,15 +13,11 @@ export const useWorker = () => {
   const days = useDays();
 
   useEffect(() => {
-    worker.addEventListener('message', message => {
-      if (!message.data.days || message.data.jobId !== jobId.current) return;
-      days.set(message.data.days);
+    worker.calc(++jobId.current, date, 1, coords).then(result => {
+      if (!result.days || result.jobId !== jobId.current) return;
+      days.set(result.days);
     });
-  }, [worker, days]);
-
-  useEffect(() => {
-    worker.calc(++jobId.current, date, 1, coords);
-  }, [worker, date, coords]);
+  }, [worker, date, coords, days]);
 };
 
 export const useGeolocation = constant({
