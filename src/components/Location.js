@@ -7,19 +7,19 @@ import './Location.scss';
 
 export default React.memo(function Location() {
   const locationShortName = useLocationShortName();
-  const [location, setLocation] = useLocation();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = useCallback(() => setIsOpen(true), []);
   const handleClose = useCallback(() => setIsOpen(false), []);
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(handleClose);
 
-  const handleLngChange = useCallback(lng => setLocation({ coords: { lng }, name: '' }), [setLocation]);
-  const handleLatChange = useCallback(lat => setLocation({ coords: { lat }, name: '' }), [setLocation]);
+  const handleLngChange = useCallback(lng => location.update({ coords: { lng }, name: '' }), [location]);
+  const handleLatChange = useCallback(lat => location.update({ coords: { lat }, name: '' }), [location]);
 
   return (
     <Fragment>
       <Button icon="locate" onClick={handleOpen} large>
-        {locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}
+        {locationShortName.current ? locationShortName.current.toUpperCase() : 'LOCATION'}
       </Button>
 
       <Dialog
@@ -35,7 +35,7 @@ export default React.memo(function Location() {
             <FormGroup label="Longitude">
               <NumericInput
                 large
-                value={location.coords.lng.toString() || ''}
+                value={location.current.coords.lng.toString() || ''}
                 onValueChange={handleLngChange}
                 fill
                 min={-180}
@@ -47,7 +47,7 @@ export default React.memo(function Location() {
             <FormGroup label="Latitude">
               <NumericInput
                 large
-                value={location.coords.lat.toString() || ''}
+                value={location.current.coords.lat.toString() || ''}
                 onValueChange={handleLatChange}
                 fill
                 min={-90}
