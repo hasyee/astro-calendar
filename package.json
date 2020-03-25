@@ -20,6 +20,7 @@
     "suncalc": "^1.8.0",
     "surge": "^0.21.3",
     "svg-to-dataurl": "^1.0.0",
+    "use.io": "0.0.2",
     "workerize-loader": "^1.1.0"
   },
   "scripts": {

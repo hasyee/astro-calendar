@@ -5,7 +5,7 @@ import { useLocation, useSearch } from '../hooks';
 import './PlaceSearch.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }) {
-  const location = useLocation();
+  const [location] = useLocation();
   const { query, handleQueryChange, items, isSearching } = useSearch();
 
   const handleItemSelect = useCallback(

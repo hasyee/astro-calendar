@@ -8,9 +8,9 @@ const constant = r => () => r;
 export const useWorker = () => {
   const jobId = useRef(0);
   const worker = useMemo(() => Worker(), []);
-  const { current: date } = useDate();
-  const { current: coords } = useCoords();
-  const days = useDays();
+  const [, date] = useDate();
+  const [, coords] = useCoords();
+  const [days] = useDays();
 
   useEffect(() => {
     worker.calc(++jobId.current, date, 1, coords).then(result => {
@@ -39,11 +39,15 @@ export const useNominatim = constant({
 });
 
 export const useLocalStorage = () => {
-  const { current: location, set: setLocation } = useLocation();
+  const [{ set: setLocation }, location] = useLocation();
 
   useEffect(() => {
     if (!localStorage.getItem('location')) return;
-    setLocation(JSON.parse(localStorage.getItem('location')));
+    try {
+      setLocation(JSON.parse(localStorage.getItem('location')));
+    } catch (error) {
+      console.error(error);
+    }
   }, [setLocation]);
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export const useLocalStorage = () => {
 
 export const useMyLocation = onFinish => {
   const geolocation = useGeolocation();
-  const location = useLocation();
+  const [location] = useLocation();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState(null);
 
@@ -75,7 +79,7 @@ export const useMyLocation = onFinish => {
 };
 
 export const useSearch = () => {
-  const locationName = useLocationName();
+  const [, locationName] = useLocationName();
   const nominatim = useNominatim();
 
   const [items, setItems] = useState([]);
