@@ -28,7 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "publish": "npm run build && surge --project ./build --domain https://astro-calendar.surge.sh"
+    "dist": "npm run build && surge --project ./build --domain https://astro-calendar.surge.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
