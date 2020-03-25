@@ -6,20 +6,23 @@ import PlaceSearch from './PlaceSearch';
 import './Location.scss';
 
 export default React.memo(function Location() {
-  const locationShortName = useLocationShortName();
-  const location = useLocation();
+  const [, locationShortName] = useLocationShortName();
+  const [{ update }, { coords }] = useLocation();
+
   const [isOpen, setIsOpen] = useState(false);
+
   const handleOpen = useCallback(() => setIsOpen(true), []);
   const handleClose = useCallback(() => setIsOpen(false), []);
+
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(handleClose);
 
-  const handleLngChange = useCallback(lng => location.update({ coords: { lng }, name: '' }), [location]);
-  const handleLatChange = useCallback(lat => location.update({ coords: { lat }, name: '' }), [location]);
+  const handleLngChange = useCallback(lng => update({ coords: { lng }, name: '' }), [update]);
+  const handleLatChange = useCallback(lat => update({ coords: { lat }, name: '' }), [update]);
 
   return (
     <Fragment>
       <Button icon="locate" onClick={handleOpen} large>
-        {locationShortName.current ? locationShortName.current.toUpperCase() : 'LOCATION'}
+        {locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}
       </Button>
 
       <Dialog
@@ -35,7 +38,7 @@ export default React.memo(function Location() {
             <FormGroup label="Longitude">
               <NumericInput
                 large
-                value={location.current.coords.lng.toString() || ''}
+                value={coords.lng.toString() || ''}
                 onValueChange={handleLngChange}
                 fill
                 min={-180}
@@ -47,7 +50,7 @@ export default React.memo(function Location() {
             <FormGroup label="Latitude">
               <NumericInput
                 large
-                value={location.current.coords.lat.toString() || ''}
+                value={coords.lat.toString() || ''}
                 onValueChange={handleLatChange}
                 fill
                 min={-90}
