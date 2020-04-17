@@ -12,6 +12,8 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 serviceWorker.register();
 
+// window.matchMedia('(display-mode: standalone)').matches
+
 window.addEventListener('beforeinstallprompt', deferredPromptEvent => {
   // Prevent Chrome 67 and earlier from automatically showing the prompt
   deferredPromptEvent.preventDefault();
