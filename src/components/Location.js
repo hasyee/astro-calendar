@@ -21,9 +21,10 @@ export default React.memo(function Location() {
 
   return (
     <Fragment>
-      <Button icon="locate" onClick={handleOpen} large>
+      <Button icon="locate" onClick={handleOpen} large className="location-button-with-text">
         {locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}
       </Button>
+      <Button icon="locate" onClick={handleOpen} large className="location-button-without-text"></Button>
 
       <Dialog
         icon="locate"
