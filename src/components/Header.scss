@@ -7,12 +7,12 @@
   }
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 400px) {
   .location-button-with-text {
     display: none !important;
   }
 }
-@media screen and (min-width: 420px) {
+@media screen and (min-width: 400px) {
   .location-button-without-text {
     display: none !important;
   }

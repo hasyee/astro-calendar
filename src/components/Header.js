@@ -10,7 +10,7 @@ export default React.memo(function Header() {
     <div className="Header">
       <div className="left-side">
         <Location />
-        <Weather />
+        {/* <Weather /> */}
       </div>
 
       <DateControls />
