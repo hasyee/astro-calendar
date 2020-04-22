@@ -36,6 +36,10 @@ $popover-background: #182026;
 
   &.current {
     background-color: #6f3434;
+
+    &:hover {
+      background-color: #582929;
+    }
   }
 
   &.selected {
