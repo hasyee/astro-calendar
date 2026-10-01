@@ -1,5 +1,5 @@
 @media screen and (max-width: 350px) {
-  button.bp3-large {
+  button.bp6-large {
     min-width: 30px !important;
     min-height: 30px !important;
     padding: 5px 10px !important;
@@ -20,7 +20,7 @@
 
 .Header {
   flex: 0 0 auto;
-  color: white;
+  color: var(--bp-palette-white);
   text-align: center;
   display: flex;
   display: flex;

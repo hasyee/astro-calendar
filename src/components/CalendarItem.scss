@@ -1,22 +1,3 @@
-$popover-background: #182026;
-
-.target-container {
-  width: 100%;
-  height: 100%;
-}
-
-.popover {
-  .bp3-popover-content {
-    background-color: $popover-background !important;
-    max-width: unset !important;
-  }
-  svg {
-    path {
-      fill: $popover-background !important;
-    }
-  }
-}
-
 .CalendarItem {
   cursor: pointer;
   width: 100%;
@@ -26,24 +7,24 @@ $popover-background: #182026;
   text-align: center;
 
   &:hover {
-    background-color: #293742;
+    background-color: var(--bp-palette-dark-gray-3);
   }
 
   &.nextMonth,
   &.prevMonth {
-    color: #999;
+    color: var(--bp-palette-gray-3);
   }
 
   &.current {
-    background-color: #6f3434;
+    background-color: var(--bp-palette-red-1);
 
     &:hover {
-      background-color: #582929;
+      background-color: var(--bp-palette-red-2);
     }
   }
 
   &.selected {
-    background-color: $popover-background;
+    background-color: var(--bp-palette-dark-gray-1);
 
     .Bands {
       opacity: 0.5;

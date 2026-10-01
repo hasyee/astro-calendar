@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
 import App from './components/App';
 import * as state from './state';
@@ -8,7 +8,7 @@ import './index.scss';
 
 useDevTools(state, { log: false, logPrimitivesOnly: false });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(<App />);
 
 registerSW({ immediate: true });
 

@@ -2,13 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-const THEME_COLOR = '#30404D';
+const THEME_COLOR = '#111418';
 
 export default defineConfig({
-  build: {
-    // TODO: remove with Blueprint 6 — Blueprint 3's CSS has selectors lightningcss rejects
-    cssMinify: false
-  },
   plugins: [
     react(),
     VitePWA({
