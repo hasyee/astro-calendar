@@ -7,7 +7,7 @@ import './location.search.scss';
 
 export default function PlaceSearch({ onSelectLocation }: { onSelectLocation: () => void }) {
   const setLocation = useLocationSetter();
-  const { query, handleQueryChange, items, isSearching } = useSearch();
+  const { query, handleQueryChange, items, isSearching, hasSearched } = useSearch();
 
   const handleItemSelect = useCallback(
     ({ display_name, lon, lat }: NominatimPlace) => {
@@ -34,8 +34,8 @@ export default function PlaceSearch({ onSelectLocation }: { onSelectLocation: ()
   const inputValueRenderer = useCallback((item: NominatimPlace) => item.display_name, []);
 
   const noResults = useMemo(
-    () => (!!query && !isSearching ? <MenuItem disabled text="No results." /> : null),
-    [query, isSearching]
+    () => (!!query && !isSearching && hasSearched ? <MenuItem disabled text="No results." /> : null),
+    [query, isSearching, hasSearched]
   );
 
   return (

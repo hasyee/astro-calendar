@@ -62,20 +62,23 @@ export const useMyLocation = (onFinish: () => void) => {
 
 export const useSearch = () => {
   const nominatim = useNominatim();
+  const { name } = useLocation();
 
   const [items, setItems] = useState<NominatimPlace[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [query, setQuery] = useDebounce<string>(
-    '',
+    name,
     useCallback(
       async (query: string) => {
         if (!query) return setItems([]);
         const results = await nominatim.search(query);
         setIsSearching(false);
         setItems(results);
+        setHasSearched(true);
       },
-      [nominatim, setIsSearching, setItems]
+      [nominatim, setIsSearching, setItems, setHasSearched]
     )
   );
 
@@ -87,5 +90,5 @@ export const useSearch = () => {
     [setIsSearching, setQuery]
   );
 
-  return { query, handleQueryChange, items, isSearching };
+  return { query, handleQueryChange, items, isSearching, hasSearched };
 };
