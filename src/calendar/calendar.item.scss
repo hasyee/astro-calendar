@@ -6,10 +6,6 @@
   flex-direction: column;
   text-align: center;
 
-  &:hover {
-    background-color: var(--bp-palette-dark-gray-3);
-  }
-
   &.nextMonth,
   &.prevMonth {
     color: var(--bp-palette-gray-3);
@@ -21,14 +17,22 @@
     &:hover {
       background-color: var(--bp-palette-red-2);
     }
+
+    &.selected {
+      background-color: var(--bp-palette-red-2);
+    }
+  }
+
+  &:hover {
+    background-color: var(--bp-palette-dark-gray-3);
   }
 
   &.selected {
-    background-color: var(--bp-palette-dark-gray-1);
+    background-color: var(--bp-palette-dark-gray-3);
 
-    .Bands {
-      opacity: 0.5;
-    }
+    // .Bands {
+    //   opacity: 0.5;
+    // }
   }
 
   header {
