@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { registerSW } from 'virtual:pwa-register';
 import App from './components/App';
-import * as serviceWorker from './serviceWorker';
 import * as state from './state';
 import { useDevTools } from 'use.io';
 import './index.scss';
@@ -10,7 +10,7 @@ useDevTools(state, { log: false, logPrimitivesOnly: false });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
-serviceWorker.register();
+registerSW({ immediate: true });
 
 // window.matchMedia('(display-mode: standalone)').matches
 

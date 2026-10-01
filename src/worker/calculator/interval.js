@@ -9,12 +9,12 @@ export const getIntersection = (interval1, interval2) => {
   };
 };
 
-export const isInInterval = (interval, value: Timestamp) => {
+export const isInInterval = (interval, value) => {
   if (!interval || !Number.isFinite(value)) return false;
   const { start, end } = interval;
   return value >= start && value <= end;
 };
 
-export const logInterval = ({ start, end }, label: string = '') => {
+export const logInterval = ({ start, end }, label = '') => {
   console.log(label, new Date(start).toLocaleString(), '-', new Date(end).toLocaleString());
 };

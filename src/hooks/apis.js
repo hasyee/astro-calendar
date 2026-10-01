@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import Worker from 'workerize-loader!../worker'; // eslint-disable-line import/no-webpack-loader-syntax
+import CalcWorker from '../worker?worker';
 import { useDate, useCoords, useDays, useLocation, useLocationName } from './state';
 import { useDebounce } from './helpers';
 
@@ -7,17 +7,23 @@ const constant = r => () => r;
 
 export const useWorker = () => {
   const jobId = useRef(0);
-  const worker = useMemo(() => Worker(), []);
+  const worker = useMemo(() => new CalcWorker(), []);
   const [, date] = useDate();
   const [, coords] = useCoords();
   const [days] = useDays();
 
   useEffect(() => {
-    worker.calc(++jobId.current, date, 1, coords).then(result => {
+    worker.onmessage = ({ data: result }) => {
       if (!result.days || result.jobId !== jobId.current) return;
       days.set(result.days);
-    });
-  }, [worker, date, coords, days]);
+    };
+  }, [worker, days]);
+
+  useEffect(() => {
+    worker.postMessage({ jobId: ++jobId.current, date, weekOffset: 1, location: coords });
+  }, [worker, date, coords]);
+
+  useEffect(() => () => worker.terminate(), [worker]);
 };
 
 export const useGeolocation = constant({

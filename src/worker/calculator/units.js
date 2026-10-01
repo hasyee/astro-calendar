@@ -10,7 +10,7 @@ export const JULIAN_DATE_OF_MILLENIUM = 2451545;
 
 export const roundTo = decimals => {
   const precision = 10 ** decimals;
-  return (value: number) => round(value * precision) / precision;
+  return value => round(value * precision) / precision;
 };
 
 export const roundTo2 = roundTo(2);
@@ -38,7 +38,7 @@ export const hmsToRad = ({ hour = 0, min = 0, sec = 0 }) => ((hour + min / 60 + 
 
 export const dmsToRad = ({ deg = 0, arcMin = 0, arcSec = 0 }) => degToRad(deg + arcMin / 60 + arcSec / 3600);
 
-export const radToArcSec = (rad): ArcSec => ((rad % PI2) / PI2) * COMPLETE_ARC_SECS;
+export const radToArcSec = rad => ((rad % PI2) / PI2) * COMPLETE_ARC_SECS;
 
 export const radToHms = rad => {
   const hourWithDecimals = radToHours(rad);
