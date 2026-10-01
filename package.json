@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "version": "echo \"${VERSION:-$RENDER_GIT_COMMIT}\" > public/version",
+    "build": "npm run version && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },

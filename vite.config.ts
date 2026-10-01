@@ -6,6 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 const THEME_COLOR = '#111418';
 
 export default defineConfig({
+  define: {
+    'import.meta.env.VERSION': JSON.stringify(process.env.VERSION || process.env.RENDER_GIT_COMMIT)
+  },
   plugins: [
     react(),
     oxlint(),
