@@ -1,4 +1,4 @@
-import type { Interval, Timestamp } from '../../types';
+import type { Interval, Timestamp } from './calculator.types';
 
 export const getIntersection = (interval1: Interval | null, interval2: Interval | null): Interval | null => {
   if (!interval1 || !interval2) return null;

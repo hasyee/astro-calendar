@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import svgToDataURL from 'svg-to-dataurl';
-import './Moon.scss';
+import './moon.scss';
 
 const getSvg = (phase: number) => {
   const d = getD(phase);

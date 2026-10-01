@@ -5,9 +5,9 @@
  */
 
 import moment from 'moment';
-import type { Interval, Position, Radians, Timestamp } from '../../types';
-import { PI2, timeToEpochDayNumber, degToRad, radToDeg } from './units';
-import { toNoon, toNextDay } from './time';
+import type { Interval, Position, Radians, Timestamp } from './calculator.types';
+import { PI2, timeToEpochDayNumber, degToRad, radToDeg } from './calculator.units';
+import { toNoon, toNextDay } from './calculator.time';
 
 const { sin, cos, asin, acos } = Math;
 

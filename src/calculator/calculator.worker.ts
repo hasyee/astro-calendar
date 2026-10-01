@@ -1,4 +1,4 @@
-import type { CalcRequest, CalcResponse } from '../types';
+import type { CalcRequest, CalcResponse } from './calculator.types';
 import createDays from './calculator';
 
 self.onmessage = ({ data: { jobId, date, weekOffset, location } }: MessageEvent<CalcRequest>) => {

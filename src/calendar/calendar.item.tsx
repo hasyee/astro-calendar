@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import { PopoverNext } from '@blueprintjs/core';
-import Moon from './Moon';
-import Bands from './Bands';
-import Info from './Info';
-import type { CalendarDay } from '../types';
-import './CalendarItem.scss';
+import Moon from '../moon/moon';
+import Bands from './calendar.bands';
+import Info from './calendar.info';
+import type { CalendarDay } from '../calculator/calculator.types';
+import './calendar.item.scss';
 
 export default React.memo(function CalendarItem({ day, classNames, moonPhase, info, bands }: CalendarDay) {
   const [isOpen, setIsOpen] = useState(false);

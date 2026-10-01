@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest, type ItemRenderer } from '@blueprintjs/select';
-import type { NominatimPlace } from '../types';
-import { useLocation, useSearch } from '../hooks';
-import './PlaceSearch.scss';
+import type { NominatimPlace } from './location.types';
+import { useLocation, useSearch } from './location.hooks';
+import './location.search.scss';
 
 export default React.memo(function PlaceSearch({ onSelectLocation }: { onSelectLocation: () => void }) {
   const [location] = useLocation();

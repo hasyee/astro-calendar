@@ -1,4 +1,4 @@
-import type { Degrees, Interval, Position, Radians, Timestamp } from '../../types';
+import type { Degrees, Interval, Position, Radians, Timestamp } from './calculator.types';
 
 export type Hms = { hour: number; min: number; sec: number };
 export type Dms = { deg: number; arcMin: number; arcSec: number };

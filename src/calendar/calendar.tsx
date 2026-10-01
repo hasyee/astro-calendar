@@ -1,7 +1,7 @@
 import React from 'react';
-import CalendarItem from './CalendarItem';
-import { useDays } from '../hooks';
-import './Calendar.scss';
+import CalendarItem from './calendar.item';
+import { useDays } from './calendar.hooks';
+import './calendar.scss';
 
 export default React.memo(function Calendar() {
   const [, days] = useDays();

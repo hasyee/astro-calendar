@@ -1,8 +1,8 @@
 import SunCalc from 'suncalc';
-import type { Interval, Position, Timestamp } from '../../types';
-import { radToDeg } from './units';
-import { toNoon } from './time';
-import { getIntersection } from './interval';
+import type { Interval, Position, Timestamp } from './calculator.types';
+import { radToDeg } from './calculator.units';
+import { toNoon } from './calculator.time';
+import { getIntersection } from './calculator.interval';
 
 type Cross = { type: 'rise' | 'set'; time: Timestamp };
 

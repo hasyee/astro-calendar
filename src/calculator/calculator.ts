@@ -1,6 +1,7 @@
 import moment from 'moment';
-import type { CalendarDay, Coords, Timestamp } from '../../types';
-import calcBands, { type DayStub } from './calcBands';
+import type { CalendarDay, Timestamp } from './calculator.types';
+import type { Coords } from '../location/location.types';
+import calcBands, { type DayStub } from './calculator.bands';
 
 export default (timestamp: Timestamp, weekOffset = 0, location: Coords): CalendarDay[] => {
   const date = moment(timestamp);

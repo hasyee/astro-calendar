@@ -1,5 +1,5 @@
 import moment from 'moment';
-import type { Timestamp } from '../../types';
+import type { Timestamp } from './calculator.types';
 
 export const toNoon = (time: Timestamp): Timestamp => {
   return moment(time)

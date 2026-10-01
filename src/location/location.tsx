@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useLocation, useMyLocation, useLocationShortName } from '../hooks';
-import PlaceSearch from './PlaceSearch';
-import './Location.scss';
+import { useLocation, useMyLocation, useLocationShortName } from './location.hooks';
+import PlaceSearch from './location.search';
+import './location.scss';
 
 export default React.memo(function Location() {
   const [, locationShortName] = useLocationShortName();

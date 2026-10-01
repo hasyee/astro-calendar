@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
-import type { Interval, NightInfo } from '../types';
-import './Info.scss';
+import type { Interval, NightInfo } from '../calculator/calculator.types';
+import './calendar.info.scss';
 
 export default React.memo(function Info(info: NightInfo) {
   const renderTransit = (name: string, interval: Interval | null, which: keyof Interval) => (

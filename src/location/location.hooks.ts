@@ -1,31 +1,21 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import CalcWorker from '../worker?worker';
-import { useDate, useCoords, useDays, useLocation } from './state';
-import type { Coords, NominatimPlace } from '../types';
-import { useDebounce } from './helpers';
+import { useState, useCallback, useEffect } from 'react';
+import type { Coords, NominatimPlace } from './location.types';
+import { useDebounce } from '../debounce/debounce.hooks';
+import { lng, lat, coords, locationName, location, locationShortName } from './location.state';
+
+export const useLng = lng.hook();
+
+export const useLat = lat.hook();
+
+export const useCoords = coords.hook();
+
+export const useLocationName = locationName.hook();
+
+export const useLocation = location.hook();
+
+export const useLocationShortName = locationShortName.hook();
 
 const constant = <T>(r: T) => () => r;
-
-export const useWorker = () => {
-  const jobId = useRef(0);
-  const worker = useMemo(() => new CalcWorker(), []);
-  const [, date] = useDate();
-  const [, coords] = useCoords();
-  const [days] = useDays();
-
-  useEffect(() => {
-    worker.onmessage = ({ data: result }) => {
-      if (!result.days || result.jobId !== jobId.current) return;
-      days.set(result.days);
-    };
-  }, [worker, days]);
-
-  useEffect(() => {
-    worker.postMessage({ jobId: ++jobId.current, date, weekOffset: 1, location: coords });
-  }, [worker, date, coords]);
-
-  useEffect(() => () => worker.terminate(), [worker]);
-};
 
 export const useGeolocation = constant({
   fetch: () =>

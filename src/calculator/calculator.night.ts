@@ -1,9 +1,9 @@
-import type { Degrees, NightInfo, Timestamp } from '../../types';
-import { getNight } from './sun';
-import { getMoonNight, getMoonPhase } from './moon';
-import { getLocation, degToRad } from './units';
-import { getIntersection } from './interval';
-import { toMidnight } from './time';
+import type { Degrees, NightInfo, Timestamp } from './calculator.types';
+import { getNight } from './calculator.sun';
+import { getMoonNight, getMoonPhase } from './calculator.moon';
+import { getLocation, degToRad } from './calculator.units';
+import { getIntersection } from './calculator.interval';
+import { toMidnight } from './calculator.time';
 
 export const getNightInfo = (date: Timestamp, latitude: Degrees, longitude: Degrees, twilight: Degrees): NightInfo => {
   const location = getLocation(latitude, longitude);

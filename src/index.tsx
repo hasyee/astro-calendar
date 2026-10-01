@@ -1,11 +1,13 @@
 import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
-import App from './components/App';
-import * as state from './state';
+import App from './app/app';
+import * as dateState from './date/date.state';
+import * as locationState from './location/location.state';
+import * as calendarState from './calendar/calendar.state';
 import { useDevTools } from 'use.io';
 import './index.scss';
 
-useDevTools(state, { log: false, logPrimitivesOnly: false });
+useDevTools({ ...dateState, ...locationState, ...calendarState }, { log: false, logPrimitivesOnly: false });
 
 createRoot(document.getElementById('root')!).render(<App />);
 

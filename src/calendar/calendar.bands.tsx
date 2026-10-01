@@ -1,6 +1,6 @@
 import React from 'react';
-import type { Band, Bands as BandsData } from '../types';
-import './Bands.scss';
+import type { Band, Bands as BandsData } from '../calculator/calculator.types';
+import './calendar.bands.scss';
 
 export default React.memo(function Bands({ night, astroNight, moonlessNight }: BandsData) {
   const renderBand = (name: string, band: Band, i: number) => (

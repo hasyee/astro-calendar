@@ -1,7 +1,7 @@
 import React from 'react';
-import Location from './Location';
-import DateControls from './DateControls';
-import './Header.scss';
+import Location from '../location/location';
+import DateControls from '../date/date.controls';
+import './header.scss';
 
 export default React.memo(function Header() {
   return (

@@ -1,7 +1,8 @@
 import moment from 'moment';
-import type { Band, Bands, CalendarDay, Coords, Interval, NightInfo, Timestamp } from '../../types';
-import { getNightInfo as getIntervals } from './getNightInfo';
-import { toPrevDay } from './time';
+import type { Band, Bands, CalendarDay, Interval, NightInfo, Timestamp } from './calculator.types';
+import type { Coords } from '../location/location.types';
+import { getNightInfo as getIntervals } from './calculator.night';
+import { toPrevDay } from './calculator.time';
 
 const DAY_IN_MINS = 24 * 60;
 
