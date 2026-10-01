@@ -14,7 +14,10 @@ export const useCoords = () => useStateSelector(LocationContext, location => loc
 
 export const useLocationShortName = () => useStateSelector(LocationContext, getPlaceShortName);
 
-const constant = <T>(r: T) => () => r;
+const constant =
+  <T>(r: T) =>
+  () =>
+    r;
 
 export const useGeolocation = constant({
   fetch: () =>

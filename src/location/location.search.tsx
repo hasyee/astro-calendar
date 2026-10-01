@@ -33,10 +33,10 @@ export default function PlaceSearch({ onSelectLocation }: { onSelectLocation: ()
 
   const inputValueRenderer = useCallback((item: NominatimPlace) => item.display_name, []);
 
-  const noResults = useMemo(() => (!!query && !isSearching ? <MenuItem disabled text="No results." /> : null), [
-    query,
-    isSearching
-  ]);
+  const noResults = useMemo(
+    () => (!!query && !isSearching ? <MenuItem disabled text="No results." /> : null),
+    [query, isSearching]
+  );
 
   return (
     <FormGroup label="Search">

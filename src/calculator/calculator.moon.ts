@@ -9,12 +9,11 @@ type Cross = { type: 'rise' | 'set'; time: Timestamp };
 const getLowerHalfDayArcsOfMoon = ({ start, end }: Interval, { lat, lon }: Position): Interval[] => {
   const latDeg = radToDeg(lat);
   const lonDeg = radToDeg(lon);
-  const { rise: riseDate1, set: setDate1, alwaysUp: alwaysUp1 } = SunCalc.getMoonTimes(
-    new Date(toNoon(start)),
-    latDeg,
-    lonDeg,
-    true
-  );
+  const {
+    rise: riseDate1,
+    set: setDate1,
+    alwaysUp: alwaysUp1
+  } = SunCalc.getMoonTimes(new Date(toNoon(start)), latDeg, lonDeg, true);
   const { rise: riseDate2, set: setDate2 } = SunCalc.getMoonTimes(new Date(toNoon(end)), latDeg, lonDeg, true);
   const crosses = [
     riseDate1 ? { type: 'rise', time: riseDate1.getTime() } : null,

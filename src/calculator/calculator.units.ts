@@ -37,9 +37,11 @@ export const radToHours = (rad: Radians) => (normalizeRad(rad) / PI2) * 24;
 
 export const hoursToRad = (hours: number): Radians => (hours / 24) * PI2;
 
-export const hmsToRad = ({ hour = 0, min = 0, sec = 0 }: Partial<Hms>): Radians => ((hour + min / 60 + sec / 3600) / 24) * PI2;
+export const hmsToRad = ({ hour = 0, min = 0, sec = 0 }: Partial<Hms>): Radians =>
+  ((hour + min / 60 + sec / 3600) / 24) * PI2;
 
-export const dmsToRad = ({ deg = 0, arcMin = 0, arcSec = 0 }: Partial<Dms>): Radians => degToRad(deg + arcMin / 60 + arcSec / 3600);
+export const dmsToRad = ({ deg = 0, arcMin = 0, arcSec = 0 }: Partial<Dms>): Radians =>
+  degToRad(deg + arcMin / 60 + arcSec / 3600);
 
 export const radToArcSec = (rad: Radians) => ((rad % PI2) / PI2) * COMPLETE_ARC_SECS;
 
@@ -75,7 +77,8 @@ export const radToDmsString = (rad: Radians) => dmsToString(radToDms(rad));
 
 export const timeToJulianDate = (time: Timestamp) => time / MILLISECONDS_OF_DAY + JULIAND_DATE_OF_UTC_EPOCH;
 
-export const julianDateToTime = (julianDate: number): Timestamp => (julianDate - JULIAND_DATE_OF_UTC_EPOCH) * MILLISECONDS_OF_DAY;
+export const julianDateToTime = (julianDate: number): Timestamp =>
+  (julianDate - JULIAND_DATE_OF_UTC_EPOCH) * MILLISECONDS_OF_DAY;
 
 export const julianDateToEpochDayNumber = (julianDate: number) => julianDate - JULIAN_DATE_OF_MILLENIUM;
 
@@ -83,7 +86,8 @@ export const epochDayNumberToJulanDate = (epochDayNumber: number) => epochDayNum
 
 export const timeToEpochDayNumber = (time: Timestamp) => julianDateToEpochDayNumber(timeToJulianDate(time));
 
-export const epochDayNumberToTime = (epochDayNumber: number) => epochDayNumberToJulanDate(julianDateToTime(epochDayNumber));
+export const epochDayNumberToTime = (epochDayNumber: number) =>
+  epochDayNumberToJulanDate(julianDateToTime(epochDayNumber));
 
 export const halfDayArcToString = ({ start, end }: Interval) =>
   `RISE: ${new Date(start).toLocaleString()} SET: ${new Date(end).toLocaleString()}`;

@@ -8,25 +8,12 @@ export default function DateControls() {
   const date = useDate();
   const setDate = useDateSetter();
   const updateMonth = useCallback(
-    (value: number) =>
-      setDate(
-        moment(date)
-          .add(value, 'months')
-          .valueOf()
-      ),
+    (value: number) => setDate(moment(date).add(value, 'months').valueOf()),
     [date, setDate]
   );
   const handlePrevMonth = useCallback(() => updateMonth(-1), [updateMonth]);
   const handleNextMonth = useCallback(() => updateMonth(+1), [updateMonth]);
-  const handleThisMonth = useCallback(
-    () =>
-      setDate(
-        moment()
-          .startOf('day')
-          .valueOf()
-      ),
-    [setDate]
-  );
+  const handleThisMonth = useCallback(() => setDate(moment().startOf('day').valueOf()), [setDate]);
 
   return (
     <div className="DateControls">

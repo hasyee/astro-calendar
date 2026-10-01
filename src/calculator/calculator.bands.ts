@@ -56,13 +56,8 @@ const forceIntervalToDay = (interval: Interval | null, day: Timestamp): DayInter
 const forceDateToday = (date: Timestamp, day: Timestamp): Timestamp | null => {
   if (!Number.isFinite(date)) return null;
   if (moment(date).isSame(moment(day), 'day')) return date;
-  if (moment(date).isBefore(moment(day), 'day'))
-    return moment(day)
-      .startOf('day')
-      .valueOf();
-  return moment(day)
-    .endOf('day')
-    .valueOf();
+  if (moment(date).isBefore(moment(day), 'day')) return moment(day).startOf('day').valueOf();
+  return moment(day).endOf('day').valueOf();
 };
 
 const bandToFraction = ([start, end]: DayInterval): Band => [timeToFraction(start), timeToFraction(end)];

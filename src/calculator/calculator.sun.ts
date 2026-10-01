@@ -46,7 +46,11 @@ export const getEclipticCoords = (time: Timestamp): Position => {
   };
 };
 
-export const getHalfDayArcOfSun = (time: Timestamp, { lat, lon }: Position, minAltitude: Radians = 0): Interval | null => {
+export const getHalfDayArcOfSun = (
+  time: Timestamp,
+  { lat, lon }: Position,
+  minAltitude: Radians = 0
+): Interval | null => {
   const y = getFractionalYear(time);
   const eqTime = getEqTime(y);
   const de = getDeclination(y);
@@ -56,20 +60,17 @@ export const getHalfDayArcOfSun = (time: Timestamp, { lat, lon }: Position, minA
   }
   const riseMins = 720 + 4 * radToDeg(-lon - ha) - eqTime;
   const setMins = 720 + 4 * radToDeg(-lon + ha) - eqTime;
-  const start = moment
-    .utc(time)
-    .startOf('day')
-    .add(riseMins, 'minutes')
-    .valueOf();
-  const end = moment
-    .utc(time)
-    .startOf('day')
-    .add(setMins, 'minutes')
-    .valueOf();
+  const start = moment.utc(time).startOf('day').add(riseMins, 'minutes').valueOf();
+  const end = moment.utc(time).startOf('day').add(setMins, 'minutes').valueOf();
   return { start, end };
 };
 
-export const getNight = (date: Timestamp, loc: Position, minAltitude: Radians = 0, isNominalNight = false): Interval | null => {
+export const getNight = (
+  date: Timestamp,
+  loc: Position,
+  minAltitude: Radians = 0,
+  isNominalNight = false
+): Interval | null => {
   const noon = toNoon(date);
   const nextDayNoon = toNextDay(noon);
   const thatDayArc = getHalfDayArcOfSun(noon, loc, minAltitude);
