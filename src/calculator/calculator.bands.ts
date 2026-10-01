@@ -10,8 +10,7 @@ type IntervalName = 'night' | 'astroNight' | 'moonlessNight';
 
 export type DayStub = { day: Timestamp; classNames?: string };
 
-// a bound is `null` when it is not finite (open-ended interval)
-type DayInterval = [Timestamp | null, Timestamp | null];
+type DayInterval = [Timestamp, Timestamp];
 
 export default (days: DayStub[], coords: Coords): CalendarDay[] => {
   const intervals = days.map(({ day }) => getIntervals(day, coords.lat, coords.lng, -18));
@@ -48,21 +47,23 @@ const getIntervalOf = (
   return intervals[i] ? intervals[i][name] : getIntervals(toPrevDay(day), coords.lat, coords.lng, -18)[name];
 };
 
+// An open-ended bound (±Infinity) means the interval goes on beyond the day, so it is clamped to the day like any
+// other date. An inverted interval (start after end) comes from days where the sun neither sets nor rises on one
+// side of the night, i.e. there is no night to show.
 const forceIntervalToDay = (interval: Interval | null, day: Timestamp): DayInterval | null => {
-  if (!interval) return null;
+  if (!interval || interval.start > interval.end) return null;
   return [forceDateToday(interval.start, day), forceDateToday(interval.end, day)];
 };
 
-const forceDateToday = (date: Timestamp, day: Timestamp): Timestamp | null => {
-  if (!Number.isFinite(date)) return null;
-  if (moment(date).isSame(moment(day), 'day')) return date;
-  if (moment(date).isBefore(moment(day), 'day')) return moment(day).startOf('day').valueOf();
-  return moment(day).endOf('day').valueOf();
+const forceDateToday = (date: Timestamp, day: Timestamp): Timestamp => {
+  const startOfDay = moment(day).startOf('day').valueOf();
+  const endOfDay = moment(day).endOf('day').valueOf();
+  return Math.min(Math.max(date, startOfDay), endOfDay);
 };
 
 const bandToFraction = ([start, end]: DayInterval): Band => [timeToFraction(start), timeToFraction(end)];
 
-const timeToFraction = (time: Timestamp | null): number => {
+const timeToFraction = (time: Timestamp): number => {
   const date = moment(time);
   const fraction = (date.hours() * 60 + date.minutes()) / DAY_IN_MINS;
   return 1 - fraction < 0.001 ? 1 : fraction;
