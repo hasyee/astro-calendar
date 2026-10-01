@@ -1,0 +1,46 @@
+import { Fragment } from 'react';
+import classnames from 'classnames';
+import moment from 'moment';
+import type { Interval, NightInfo } from '../calculator/calculator.types';
+import './calendar.info.scss';
+
+export default function Info(info: NightInfo) {
+  const renderTransit = (name: string, interval: Interval | null, which: keyof Interval) => (
+    <Fragment key={which}>
+      <td>{name}</td>
+      <td>{interval && Number.isFinite(interval[which]) ? moment(interval[which]).format('ddd HH:mm') : '-'}</td>
+    </Fragment>
+  );
+
+  const renderRow = (
+    name: string,
+    key: 'night' | 'astroNight' | 'moonNight' | 'moonlessNight',
+    startName: string,
+    endName: string
+  ) => (
+    <tr>
+      <td>
+        <span className={classnames('dot', key)} /> {name}
+      </td>
+      {renderTransit(startName, info[key], 'start')}
+      {renderTransit(endName, info[key], 'end')}
+    </tr>
+  );
+
+  return (
+    <div className="Info">
+      <table>
+        <tbody>
+          <tr>
+            <td colSpan={2}>Moon phase: {(info.moonPhase * 100).toFixed(0)}%</td>
+            <td colSpan={3}>Moon illumination: {(info.moonIllumination * 100).toFixed(0)}%</td>
+          </tr>
+          {renderRow('Twilight', 'night', 'Sunset', 'Sunrise')}
+          {renderRow('Astro night', 'astroNight', 'From', 'To')}
+          {renderRow('Moon', 'moonNight', 'Moonset', 'Moonrise')}
+          {renderRow('Moonless night', 'moonlessNight', 'From', 'To')}
+        </tbody>
+      </table>
+    </div>
+  );
+}
