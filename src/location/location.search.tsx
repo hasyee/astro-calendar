@@ -2,19 +2,19 @@ import { useCallback, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { Suggest, type ItemRenderer } from '@blueprintjs/select';
 import type { NominatimPlace } from './location.types';
-import { useLocation, useSearch } from './location.hooks';
+import { useLocationSetter, useSearch } from './location.hooks';
 import './location.search.scss';
 
 export default function PlaceSearch({ onSelectLocation }: { onSelectLocation: () => void }) {
-  const [location] = useLocation();
+  const setLocation = useLocationSetter();
   const { query, handleQueryChange, items, isSearching } = useSearch();
 
   const handleItemSelect = useCallback(
     ({ display_name, lon, lat }: NominatimPlace) => {
-      location.set({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
+      setLocation({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
-    [location, onSelectLocation]
+    [setLocation, onSelectLocation]
   );
 
   const itemRenderer = useCallback<ItemRenderer<NominatimPlace>>(

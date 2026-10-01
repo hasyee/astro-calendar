@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
-import { useDate } from './date.hooks';
+import { useDate, useDateSetter } from './date.hooks';
 import './date.controls.scss';
 
 export default function DateControls() {
-  const [{ set: setDate }, date] = useDate();
+  const date = useDate();
+  const setDate = useDateSetter();
   const updateMonth = useCallback(
     (value: number) =>
       setDate(

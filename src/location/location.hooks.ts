@@ -1,19 +1,18 @@
-import { useState, useCallback, useEffect } from 'react';
-import type { Coords, NominatimPlace } from './location.types';
+import { useState, useCallback } from 'react';
+import type { Coords, NominatimPlace, Place } from './location.types';
 import { useDebounce } from '../debounce/debounce.hooks';
-import { lng, lat, coords, locationName, location, locationShortName } from './location.state';
+import { createStateContext, useStateSelector, useStateSetter, useStateValue } from '../provider/state.hooks';
+import { defaultPlace, getPlaceShortName } from './location.utils';
 
-export const useLng = lng.hook();
+export const LocationContext = createStateContext<Place>(defaultPlace);
 
-export const useLat = lat.hook();
+export const useLocation = () => useStateValue(LocationContext);
 
-export const useCoords = coords.hook();
+export const useLocationSetter = () => useStateSetter(LocationContext);
 
-export const useLocationName = locationName.hook();
+export const useCoords = () => useStateSelector(LocationContext, location => location.coords);
 
-export const useLocation = location.hook();
-
-export const useLocationShortName = locationShortName.hook();
+export const useLocationShortName = () => useStateSelector(LocationContext, getPlaceShortName);
 
 const constant = <T>(r: T) => () => r;
 
@@ -35,27 +34,9 @@ export const useNominatim = constant({
       .catch(() => [])
 });
 
-export const useLocalStorage = () => {
-  const [{ set: setLocation }, location] = useLocation();
-
-  useEffect(() => {
-    const stored = localStorage.getItem('location');
-    if (!stored) return;
-    try {
-      setLocation(JSON.parse(stored));
-    } catch (error) {
-      console.error(error);
-    }
-  }, [setLocation]);
-
-  useEffect(() => {
-    localStorage.setItem('location', JSON.stringify(location));
-  }, [location]);
-};
-
 export const useMyLocation = (onFinish: () => void) => {
   const geolocation = useGeolocation();
-  const [location] = useLocation();
+  const setLocation = useLocationSetter();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [locationFetchingError, setLocationFetchingError] = useState<string | null>(null);
 
@@ -64,14 +45,14 @@ export const useMyLocation = (onFinish: () => void) => {
       setIsFetchingLocation(true);
       setLocationFetchingError(null);
       const coords = await geolocation.fetch();
-      location.set({ coords, name: '' });
+      setLocation({ coords, name: '' });
       setIsFetchingLocation(false);
       onFinish();
     } catch (error) {
       setLocationFetchingError((error as { message: string }).message);
       setIsFetchingLocation(false);
     }
-  }, [setIsFetchingLocation, geolocation, location, onFinish]);
+  }, [setIsFetchingLocation, geolocation, setLocation, onFinish]);
 
   return { isFetchingLocation, locationFetchingError, fetchLocation };
 };

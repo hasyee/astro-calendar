@@ -1,15 +1,20 @@
 import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
 import App from './app/app';
-import * as dateState from './date/date.state';
-import * as locationState from './location/location.state';
-import * as calendarState from './calendar/calendar.state';
-import { useDevTools } from 'use.io';
+import DateProvider from './date/date.provider';
+import LocationProvider from './location/location.provider';
+import CalendarProvider from './calendar/calendar.provider';
 import './index.scss';
 
-useDevTools({ ...dateState, ...locationState, ...calendarState }, { log: false, logPrimitivesOnly: false });
-
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(
+  <DateProvider>
+    <LocationProvider>
+      <CalendarProvider>
+        <App />
+      </CalendarProvider>
+    </LocationProvider>
+  </DateProvider>
+);
 
 registerSW({ immediate: true });
 

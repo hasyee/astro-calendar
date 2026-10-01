@@ -1,13 +1,14 @@
 import { Fragment, useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
-import { useLocation, useMyLocation, useLocationShortName } from './location.hooks';
+import { useLocation, useLocationSetter, useMyLocation, useLocationShortName } from './location.hooks';
 import PlaceSearch from './location.search';
 import './location.scss';
 
 export default function Location() {
-  const [, locationShortName] = useLocationShortName();
-  const [{ update }, { coords }] = useLocation();
+  const locationShortName = useLocationShortName();
+  const { coords } = useLocation();
+  const setLocation = useLocationSetter();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,8 +17,14 @@ export default function Location() {
 
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(handleClose);
 
-  const handleLngChange = useCallback((lng: number) => update({ coords: { lng }, name: '' }), [update]);
-  const handleLatChange = useCallback((lat: number) => update({ coords: { lat }, name: '' }), [update]);
+  const handleLngChange = useCallback(
+    (lng: number) => setLocation(location => ({ coords: { ...location.coords, lng }, name: '' })),
+    [setLocation]
+  );
+  const handleLatChange = useCallback(
+    (lat: number) => setLocation(location => ({ coords: { ...location.coords, lat }, name: '' })),
+    [setLocation]
+  );
 
   return (
     <Fragment>
