@@ -1,7 +1,8 @@
 import { Fragment, useState, useCallback } from 'react';
 import classnames from 'classnames';
-import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
+import { Button, Dialog, Callout, Classes } from '@blueprintjs/core';
 import { useLocation, useLocationSetter, useMyLocation, useLocationShortName } from './location.hooks';
+import CoordinateInput from './location.coordinate';
 import PlaceSearch from './location.search';
 import './location.scss';
 
@@ -43,30 +44,22 @@ export default function Location() {
         <div className={classnames(Classes.DIALOG_BODY, 'Location')}>
           <PlaceSearch onSelectLocation={handleClose} />
           <div className="lat-lon">
-            <FormGroup label="Longitude">
-              <NumericInput
-                large
-                value={coords.lng.toString() || ''}
-                onValueChange={handleLngChange}
-                fill
-                min={-180}
-                max={+180}
-                minorStepSize={0.0001}
-                disabled={isFetchingLocation}
-              />
-            </FormGroup>
-            <FormGroup label="Latitude">
-              <NumericInput
-                large
-                value={coords.lat.toString() || ''}
-                onValueChange={handleLatChange}
-                fill
-                min={-90}
-                max={+90}
-                minorStepSize={0.0001}
-                disabled={isFetchingLocation}
-              />
-            </FormGroup>
+            <CoordinateInput
+              label="Longitude"
+              value={coords.lng}
+              min={-180}
+              max={180}
+              disabled={isFetchingLocation}
+              onChange={handleLngChange}
+            />
+            <CoordinateInput
+              label="Latitude"
+              value={coords.lat}
+              min={-90}
+              max={90}
+              disabled={isFetchingLocation}
+              onChange={handleLatChange}
+            />
           </div>
 
           {locationFetchingError && (
