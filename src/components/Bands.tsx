@@ -1,11 +1,12 @@
 import React from 'react';
+import type { Band, Bands as BandsData } from '../types';
 import './Bands.scss';
 
-export default React.memo(function Bands({ night, astroNight, moonlessNight }) {
-  const renderBand = (name, band, i) => (
+export default React.memo(function Bands({ night, astroNight, moonlessNight }: BandsData) {
+  const renderBand = (name: string, band: Band, i: number) => (
     <div key={i} className={name} style={{ left: `${band[0] * 100}%`, right: `${(1 - band[1]) * 100}%` }} />
   );
-  const renderBands = (name, bands) => bands.map((band, i) => renderBand(name, band, i));
+  const renderBands = (name: string, bands: Band[]) => bands.map((band, i) => renderBand(name, band, i));
 
   return (
     <div className="Bands">

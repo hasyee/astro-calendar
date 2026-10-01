@@ -1,9 +1,10 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import CalcWorker from '../worker?worker';
-import { useDate, useCoords, useDays, useLocation, useLocationName } from './state';
+import { useDate, useCoords, useDays, useLocation } from './state';
+import type { Coords, NominatimPlace } from '../types';
 import { useDebounce } from './helpers';
 
-const constant = r => () => r;
+const constant = <T>(r: T) => () => r;
 
 export const useWorker = () => {
   const jobId = useRef(0);
@@ -28,7 +29,7 @@ export const useWorker = () => {
 
 export const useGeolocation = constant({
   fetch: () =>
-    new Promise((resolve, reject) =>
+    new Promise<Coords>((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(
         response => resolve({ lng: Number(response.coords.longitude), lat: Number(response.coords.latitude) }),
         error => reject(error),
@@ -38,19 +39,20 @@ export const useGeolocation = constant({
 });
 
 export const useNominatim = constant({
-  search: query =>
+  search: (query: string): Promise<NominatimPlace[]> =>
     fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&namedetails=1`)
-      .then(resp => resp.json())
-      .catch(error => [])
+      .then(resp => resp.json() as Promise<NominatimPlace[]>)
+      .catch(() => [])
 });
 
 export const useLocalStorage = () => {
   const [{ set: setLocation }, location] = useLocation();
 
   useEffect(() => {
-    if (!localStorage.getItem('location')) return;
+    const stored = localStorage.getItem('location');
+    if (!stored) return;
     try {
-      setLocation(JSON.parse(localStorage.getItem('location')));
+      setLocation(JSON.parse(stored));
     } catch (error) {
       console.error(error);
     }
@@ -61,11 +63,11 @@ export const useLocalStorage = () => {
   }, [location]);
 };
 
-export const useMyLocation = onFinish => {
+export const useMyLocation = (onFinish: () => void) => {
   const geolocation = useGeolocation();
   const [location] = useLocation();
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
-  const [locationFetchingError, setLocationFetchingError] = useState(null);
+  const [locationFetchingError, setLocationFetchingError] = useState<string | null>(null);
 
   const fetchLocation = useCallback(async () => {
     try {
@@ -76,7 +78,7 @@ export const useMyLocation = onFinish => {
       setIsFetchingLocation(false);
       onFinish();
     } catch (error) {
-      setLocationFetchingError(error.message);
+      setLocationFetchingError((error as { message: string }).message);
       setIsFetchingLocation(false);
     }
   }, [setIsFetchingLocation, geolocation, location, onFinish]);
@@ -85,16 +87,15 @@ export const useMyLocation = onFinish => {
 };
 
 export const useSearch = () => {
-  const [, locationName] = useLocationName();
   const nominatim = useNominatim();
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<NominatimPlace[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  const [query, setQuery] = useDebounce(
-    locationName.current,
+  const [query, setQuery] = useDebounce<string>(
+    '',
     useCallback(
-      async query => {
+      async (query: string) => {
         if (!query) return setItems([]);
         const results = await nominatim.search(query);
         setIsSearching(false);
@@ -105,7 +106,7 @@ export const useSearch = () => {
   );
 
   const handleQueryChange = useCallback(
-    query => {
+    (query: string) => {
       setIsSearching(true);
       setQuery(query);
     },

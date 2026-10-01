@@ -7,7 +7,7 @@ import './DateControls.scss';
 export default React.memo(function DateControls() {
   const [{ set: setDate }, date] = useDate();
   const updateMonth = useCallback(
-    value =>
+    (value: number) =>
       setDate(
         moment(date)
           .add(value, 'months')

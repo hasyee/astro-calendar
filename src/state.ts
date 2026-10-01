@@ -1,5 +1,6 @@
 import moment from 'moment';
 import io from 'use.io';
+import type { CalendarDay } from './types';
 
 export const date = io.state(
   moment()
@@ -28,4 +29,6 @@ export const locationShortName = io.memo(
   [location]
 );
 
-export const days = io.state([]);
+const noDays: CalendarDay[] = [];
+
+export const days = io.state(noDays);

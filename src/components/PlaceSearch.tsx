@@ -1,22 +1,23 @@
 import React, { useCallback, useMemo } from 'react';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
-import { Suggest } from '@blueprintjs/select';
+import { Suggest, type ItemRenderer } from '@blueprintjs/select';
+import type { NominatimPlace } from '../types';
 import { useLocation, useSearch } from '../hooks';
 import './PlaceSearch.scss';
 
-export default React.memo(function PlaceSearch({ onSelectLocation }) {
+export default React.memo(function PlaceSearch({ onSelectLocation }: { onSelectLocation: () => void }) {
   const [location] = useLocation();
   const { query, handleQueryChange, items, isSearching } = useSearch();
 
   const handleItemSelect = useCallback(
-    ({ display_name, lon, lat }) => {
+    ({ display_name, lon, lat }: NominatimPlace) => {
       location.set({ coords: { lng: Number(lon), lat: Number(lat) }, name: display_name });
       onSelectLocation();
     },
     [location, onSelectLocation]
   );
 
-  const itemRenderer = useCallback(
+  const itemRenderer = useCallback<ItemRenderer<NominatimPlace>>(
     (item, { handleClick, modifiers }) => (
       <MenuItem
         key={item.place_id}
@@ -30,7 +31,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
     []
   );
 
-  const inputValueRenderer = useCallback(item => item.display_name, []);
+  const inputValueRenderer = useCallback((item: NominatimPlace) => item.display_name, []);
 
   const noResults = useMemo(() => (!!query && !isSearching ? <MenuItem disabled text="No results." /> : null), [
     query,
@@ -39,7 +40,7 @@ export default React.memo(function PlaceSearch({ onSelectLocation }) {
 
   return (
     <FormGroup label="Search">
-      <Suggest
+      <Suggest<NominatimPlace>
         fill
         popoverProps={{ minimal: true, popoverClassName: 'suggest-dropdown-popover' }}
         inputProps={{ large: true }}

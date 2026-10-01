@@ -1,17 +1,23 @@
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
+import type { Interval, NightInfo } from '../types';
 import './Info.scss';
 
-export default React.memo(function Info(info) {
-  const renderTransit = (name, interval, which) => (
+export default React.memo(function Info(info: NightInfo) {
+  const renderTransit = (name: string, interval: Interval | null, which: keyof Interval) => (
     <Fragment key={which}>
       <td>{name}</td>
       <td>{interval && Number.isFinite(interval[which]) ? moment(interval[which]).format('ddd HH:mm') : '-'}</td>
     </Fragment>
   );
 
-  const renderRow = (name, key, startName, endName) => (
+  const renderRow = (
+    name: string,
+    key: 'night' | 'astroNight' | 'moonNight' | 'moonlessNight',
+    startName: string,
+    endName: string
+  ) => (
     <tr>
       <td>
         <span className={classnames('dot', key)} /> {name}

@@ -1,12 +1,16 @@
 import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react';
 
-export const useDebounce = (initialValue, callback, timeout = 500) => {
-  const timer = useRef(null);
+export const useDebounce = <T>(
+  initialValue: T,
+  callback: (value: T) => void,
+  timeout = 500
+): [T, (nextValue: T, triggered?: boolean) => void] => {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [value, setValue] = useState(initialValue);
 
   const trigger = useCallback(
-    (nextValue, triggered = true) => {
+    (nextValue: T, triggered = true) => {
       setValue(nextValue);
       if (!triggered) return;
       if (timer.current) clearTimeout(timer.current);
@@ -17,7 +21,12 @@ export const useDebounce = (initialValue, callback, timeout = 500) => {
     [timer, timeout, callback]
   );
 
-  useEffect(() => () => timer && clearTimeout(timer.current), [timer]);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [timer]
+  );
 
   useLayoutEffect(
     useCallback(() => {

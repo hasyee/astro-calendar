@@ -16,8 +16,8 @@ export default React.memo(function Location() {
 
   const { fetchLocation, isFetchingLocation, locationFetchingError } = useMyLocation(handleClose);
 
-  const handleLngChange = useCallback(lng => update({ coords: { lng }, name: '' }), [update]);
-  const handleLatChange = useCallback(lat => update({ coords: { lat }, name: '' }), [update]);
+  const handleLngChange = useCallback((lng: number) => update({ coords: { lng }, name: '' }), [update]);
+  const handleLatChange = useCallback((lat: number) => update({ coords: { lat }, name: '' }), [update]);
 
   return (
     <Fragment>

@@ -1,28 +1,31 @@
 import SunCalc from 'suncalc';
+import type { Interval, Position, Timestamp } from '../../types';
 import { radToDeg } from './units';
 import { toNoon } from './time';
 import { getIntersection } from './interval';
 
-const getLowerHalfDayArcsOfMoon = ({ start, end }, { lat, lon }) => {
+type Cross = { type: 'rise' | 'set'; time: Timestamp };
+
+const getLowerHalfDayArcsOfMoon = ({ start, end }: Interval, { lat, lon }: Position): Interval[] => {
   const latDeg = radToDeg(lat);
   const lonDeg = radToDeg(lon);
   const { rise: riseDate1, set: setDate1, alwaysUp: alwaysUp1 } = SunCalc.getMoonTimes(
-    toNoon(start),
+    new Date(toNoon(start)),
     latDeg,
     lonDeg,
     true
   );
-  const { rise: riseDate2, set: setDate2 } = SunCalc.getMoonTimes(toNoon(end), latDeg, lonDeg, true);
+  const { rise: riseDate2, set: setDate2 } = SunCalc.getMoonTimes(new Date(toNoon(end)), latDeg, lonDeg, true);
   const crosses = [
     riseDate1 ? { type: 'rise', time: riseDate1.getTime() } : null,
     setDate1 ? { type: 'set', time: setDate1.getTime() } : null,
     riseDate2 ? { type: 'rise', time: riseDate2.getTime() } : null,
     setDate2 ? { type: 'set', time: setDate2.getTime() } : null
   ]
-    .filter(_ => _)
+    .filter((cross): cross is Cross => !!cross)
     .sort((a, b) => a.time - b.time);
   if (crosses.length === 0) return alwaysUp1 ? [] : [{ start: -Infinity, end: Infinity }];
-  return crosses.reduce((halfDayArcs, cross) => {
+  return crosses.reduce<Interval[]>((halfDayArcs, cross) => {
     if (cross.type === 'set') return [...halfDayArcs, { start: cross.time, end: Infinity }];
     else {
       if (halfDayArcs.length === 0) return [{ start: -Infinity, end: cross.time }];
@@ -35,13 +38,13 @@ const getLowerHalfDayArcsOfMoon = ({ start, end }, { lat, lon }) => {
   }, []);
 };
 
-export const getMoonNight = (interval, loc) => {
+export const getMoonNight = (interval: Interval | null, loc: Position): Interval | null => {
   if (!interval) return null;
   const lowerHalfDayArcsOfMoon = getLowerHalfDayArcsOfMoon(interval, loc);
   return lowerHalfDayArcsOfMoon.find(halfDayArc => !!getIntersection(interval, halfDayArc)) || null;
 };
 
-export const getMoonPhase = midnight => {
+export const getMoonPhase = (midnight: Timestamp) => {
   const { phase: moonPhase, fraction: moonIllumination } = SunCalc.getMoonIllumination(new Date(midnight));
   return { moonPhase, moonIllumination };
 };
