@@ -1,9 +1,8 @@
-import React from 'react';
 import Location from '../location/location';
 import DateControls from '../date/date.controls';
 import './header.scss';
 
-export default React.memo(function Header() {
+export default function Header() {
   return (
     <div className="Header">
       <div className="left-side">
@@ -13,4 +12,4 @@ export default React.memo(function Header() {
       <DateControls />
     </div>
   );
-});
+}

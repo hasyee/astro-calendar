@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import type { Interval, NightInfo } from '../calculator/calculator.types';
 import './calendar.info.scss';
 
-export default React.memo(function Info(info: NightInfo) {
+export default function Info(info: NightInfo) {
   const renderTransit = (name: string, interval: Interval | null, which: keyof Interval) => (
     <Fragment key={which}>
       <td>{name}</td>
@@ -43,4 +43,4 @@ export default React.memo(function Info(info: NightInfo) {
       </table>
     </div>
   );
-});
+}

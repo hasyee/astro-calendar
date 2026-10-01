@@ -1,8 +1,7 @@
-import React from 'react';
 import type { Band, Bands as BandsData } from '../calculator/calculator.types';
 import './calendar.bands.scss';
 
-export default React.memo(function Bands({ night, astroNight, moonlessNight }: BandsData) {
+export default function Bands({ night, astroNight, moonlessNight }: BandsData) {
   const renderBand = (name: string, band: Band, i: number) => (
     <div key={i} className={name} style={{ left: `${band[0] * 100}%`, right: `${(1 - band[1]) * 100}%` }} />
   );
@@ -16,4 +15,4 @@ export default React.memo(function Bands({ night, astroNight, moonlessNight }: B
       {renderBands('moonlessNight', moonlessNight)}
     </div>
   );
-});
+}

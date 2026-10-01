@@ -1,11 +1,10 @@
-import React from 'react';
 import Header from '../header/header';
 import Calendar from '../calendar/calendar';
 import { useWorker } from '../calendar/calendar.hooks';
 import { useLocalStorage } from '../location/location.hooks';
 import './app.scss';
 
-export default React.memo(function App() {
+export default function App() {
   useLocalStorage();
   useWorker();
 
@@ -15,4 +14,4 @@ export default React.memo(function App() {
       <Calendar />
     </div>
   );
-});
+}

@@ -1,11 +1,11 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { Button, NumericInput, FormGroup, Dialog, Callout, Classes } from '@blueprintjs/core';
 import { useLocation, useMyLocation, useLocationShortName } from './location.hooks';
 import PlaceSearch from './location.search';
 import './location.scss';
 
-export default React.memo(function Location() {
+export default function Location() {
   const [, locationShortName] = useLocationShortName();
   const [{ update }, { coords }] = useLocation();
 
@@ -78,4 +78,4 @@ export default React.memo(function Location() {
       </Dialog>
     </Fragment>
   );
-});
+}

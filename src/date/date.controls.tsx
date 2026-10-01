@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
 import { useDate } from './date.hooks';
 import './date.controls.scss';
 
-export default React.memo(function DateControls() {
+export default function DateControls() {
   const [{ set: setDate }, date] = useDate();
   const updateMonth = useCallback(
     (value: number) =>
@@ -41,4 +41,4 @@ export default React.memo(function DateControls() {
       </Button>
     </div>
   );
-});
+}

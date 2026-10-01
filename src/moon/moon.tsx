@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import svgToDataURL from 'svg-to-dataurl';
 import './moon.scss';
@@ -30,8 +29,8 @@ const svgs: Record<string, string> = Object.fromEntries(
   Array.from({ length: 101 }, (_, i) => [(i / 100).toFixed(2), getSvg(i / 100)])
 );
 
-export default React.memo(function Moon({ phase }: { phase: number }) {
+export default function Moon({ phase }: { phase: number }) {
   const svg = svgs[phase.toFixed(2)];
 
   return <div className="Moon" style={{ backgroundImage: `url(${svg})` }} />;
-});
+}
