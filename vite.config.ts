@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import oxlint from 'vite-plugin-oxlint';
 import { VitePWA } from 'vite-plugin-pwa';
 
 const THEME_COLOR = '#111418';
@@ -7,6 +8,7 @@ const THEME_COLOR = '#111418';
 export default defineConfig({
   plugins: [
     react(),
+    oxlint(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {

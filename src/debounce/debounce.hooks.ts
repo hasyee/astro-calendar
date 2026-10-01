@@ -28,12 +28,7 @@ export const useDebounce = <T>(
     [timer]
   );
 
-  useLayoutEffect(
-    useCallback(() => {
-      if (value !== initialValue) setValue(initialValue);
-    }, [value, initialValue]),
-    [initialValue]
-  );
+  useLayoutEffect(() => setValue(initialValue), [initialValue]);
 
   return [value, trigger];
 };
