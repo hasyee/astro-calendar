@@ -21,11 +21,20 @@ export default defineConfig({
         display: 'standalone',
         theme_color: THEME_COLOR,
         background_color: THEME_COLOR,
-        icons: [36, 48, 72, 96, 144, 192].map(size => ({
-          src: `/icons/android-icon-${size}x${size}.png`,
-          sizes: `${size}x${size}`,
-          type: 'image/png'
-        }))
+        icons: [
+          ...[36, 48, 72, 96, 144, 192, 512].map(size => ({
+            src: `/icons/android-icon-${size}x${size}.png`,
+            sizes: `${size}x${size}`,
+            type: 'image/png'
+          })),
+          // Android masks the icon to its own shape: this one fills it, instead of shrinking onto a white disk
+          {
+            src: '/icons/android-icon-maskable-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
       }
     })
   ]
