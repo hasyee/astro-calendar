@@ -21,16 +21,3 @@ createRoot(document.getElementById('root')!).render(
 );
 
 registerSW({ immediate: true });
-
-// window.matchMedia('(display-mode: standalone)').matches
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-}
-
-window.addEventListener('beforeinstallprompt', event => {
-  const deferredPromptEvent = event as BeforeInstallPromptEvent;
-  // Prevent Chrome 67 and earlier from automatically showing the prompt
-  deferredPromptEvent.preventDefault();
-  deferredPromptEvent.prompt();
-});
