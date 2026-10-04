@@ -1,6 +1,6 @@
 import { Fragment, useState, useCallback } from 'react';
-import classnames from 'classnames';
-import { Button, Dialog, Callout, Classes } from '@blueprintjs/core';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { useLocation, useLocationSetter, useMyLocation, useLocationShortName } from './location.hooks';
 import CoordinateInput from './location.coordinate';
 import PlaceSearch from './location.search';
@@ -29,19 +29,28 @@ export default function Location() {
 
   return (
     <Fragment>
-      <Button icon="locate" onClick={handleOpen} large className="location-button-with-text">
-        {locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}
+      <Button
+        variant="outlined"
+        color="inherit"
+        startIcon={<MyLocationIcon />}
+        onClick={handleOpen}
+        className="location-button-with-text"
+      >
+        <span className="label">{locationShortName ? locationShortName.toUpperCase() : 'LOCATION'}</span>
       </Button>
-      <Button icon="locate" onClick={handleOpen} large className="location-button-without-text"></Button>
+      <IconButton color="inherit" onClick={handleOpen} className="location-button-without-text">
+        <MyLocationIcon />
+      </IconButton>
 
       <Dialog
-        icon="locate"
-        title="Location"
-        isOpen={isOpen}
-        onClose={handleClose}
-        canOutsideClickClose={!isFetchingLocation}
+        open={isOpen}
+        onClose={isFetchingLocation ? undefined : handleClose}
+        fullWidth
+        maxWidth="xs"
+        className="Location"
       >
-        <div className={classnames(Classes.DIALOG_BODY, 'Location')}>
+        <DialogTitle>Location</DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '8px !important' }}>
           <PlaceSearch onSelectLocation={handleClose} />
           <div className="lat-lon">
             <CoordinateInput
@@ -62,19 +71,18 @@ export default function Location() {
             />
           </div>
 
-          {locationFetchingError && (
-            <Callout icon={undefined} intent="danger">
-              {locationFetchingError}
-            </Callout>
-          )}
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button large onClick={fetchLocation} icon={'locate'} loading={isFetchingLocation}>
-              USE MY LOCATION
-            </Button>
-          </div>
-        </div>
+          {locationFetchingError && <Alert severity="error">{locationFetchingError}</Alert>}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={fetchLocation}
+            startIcon={<MyLocationIcon />}
+            loading={isFetchingLocation}
+            loadingPosition="start"
+          >
+            Use my location
+          </Button>
+        </DialogActions>
       </Dialog>
     </Fragment>
   );

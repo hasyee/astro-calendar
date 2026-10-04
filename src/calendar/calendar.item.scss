@@ -8,27 +8,24 @@
 
   &.nextMonth,
   &.prevMonth {
-    color: var(--bp-palette-gray-3);
+    color: var(--mui-palette-text-disabled);
   }
 
   &.current {
-    background-color: var(--bp-palette-red-1);
+    background-color: var(--mui-palette-error-dark);
 
-    &:hover {
-      background-color: var(--bp-palette-red-2);
-    }
-
+    &:hover,
     &.selected {
-      background-color: var(--bp-palette-red-2);
+      background-color: color-mix(in srgb, var(--mui-palette-error-dark), black 20%);
     }
   }
 
   &:hover {
-    background-color: var(--bp-palette-dark-gray-3);
+    background-color: var(--mui-palette-action-hover);
   }
 
   &.selected {
-    background-color: var(--bp-palette-dark-gray-3);
+    background-color: var(--mui-palette-action-hover);
 
     // .Bands {
     //   opacity: 0.5;

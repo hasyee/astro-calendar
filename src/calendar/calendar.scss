@@ -10,18 +10,17 @@
 
     .cell {
       flex: 0 14.28571%;
-      background-color: var(--bp-surface-background-color-default-active);
-      border-right: 1px solid var(--bp-palette-dark-gray-3);
-      //border-bottom: 1px solid var(--bp-palette-dark-gray-3);
+      background-color: var(--mui-palette-background-default);
+      border-right: 1px solid var(--mui-palette-divider);
       &:nth-child(7n) {
         border-right: 0;
       }
       &:nth-child(7n),
       &:nth-child(7n-1) {
-        background-color: var(--bp-surface-background-color-default-hover);
+        background-color: var(--mui-palette-background-paper);
       }
       &:nth-child(-n + 7) {
-        border-top: 1px solid var(--bp-palette-dark-gray-3);
+        border-top: 1px solid var(--mui-palette-divider);
       }
     }
   }
