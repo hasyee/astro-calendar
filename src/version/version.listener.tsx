@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Intent, Tag } from '@blueprintjs/core';
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { useCurrentVersion, useFetchLatestVersion, useReloadToLatestVersion } from './version.hooks';
 import { VERSION_CHECK_INTERVAL } from './version.utils';
 
@@ -28,24 +29,29 @@ export default function VersionListener() {
   const handleClose = useCallback(() => setNextVersion(null), []);
 
   return (
-    <Alert
-      confirmButtonText="Reload now"
-      cancelButtonText="Not now"
-      intent={Intent.WARNING}
-      isOpen={!!nextVersion}
-      loading={isReloading}
-      onCancel={handleClose}
-      onConfirm={handleConfirm}
-      icon="warning-sign"
-    >
-      <p>There is a new version of the app.</p>
-      <p>
-        Your version: <Tag>{version}</Tag>
-      </p>
-      <p>
-        New version: <Tag intent={Intent.PRIMARY}>{nextVersion}</Tag>
-      </p>
-      <p>Would you like to reload the page?</p>
-    </Alert>
+    <Dialog open={!!nextVersion} onClose={isReloading ? undefined : handleClose}>
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <WarningAmberIcon color="warning" />
+        New version available
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>There is a new version of the app.</DialogContentText>
+        <DialogContentText>
+          Your version: <Chip size="small" label={version} />
+        </DialogContentText>
+        <DialogContentText>
+          New version: <Chip size="small" color="primary" label={nextVersion} />
+        </DialogContentText>
+        <DialogContentText>Would you like to reload the page?</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button color="inherit" onClick={handleClose} disabled={isReloading}>
+          Not now
+        </Button>
+        <Button color="warning" onClick={handleConfirm} loading={isReloading}>
+          Reload now
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

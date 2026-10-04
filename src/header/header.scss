@@ -1,9 +1,13 @@
+.Header .MuiButton-root {
+  min-width: 40px;
+  padding: 5px 12px;
+}
+
 @media screen and (max-width: 350px) {
-  button.bp6-large {
-    min-width: 30px !important;
-    min-height: 30px !important;
-    padding: 5px 10px !important;
-    font-size: 14px !important;
+  .Header .MuiButton-root {
+    min-width: 30px;
+    padding: 4px 8px;
+    font-size: 14px;
   }
 }
 
@@ -18,27 +22,33 @@
   }
 }
 
-.Header {
+.Header.MuiAppBar-root {
   flex: 0 0 auto;
-  color: var(--bp-palette-white);
-  text-align: center;
-  display: flex;
-  display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
+  gap: 0.5rem;
+  min-width: 0;
+  height: 50px;
+  padding: 0 0.5rem;
+  z-index: 3;
 
-  .left-side {
-    > *:not(:last-child) {
-      margin-right: 0.5rem;
-    }
+  .spacer {
+    flex: 1 1 auto;
   }
 
-  button {
-    span {
+  // a long place name is cut with an ellipsis instead of wrapping and growing the button
+  .location-button-with-text {
+    flex: 0 1 auto;
+    min-width: 0;
+
+    .label {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+
+  .DateControls {
+    flex: 0 0 auto;
   }
 }

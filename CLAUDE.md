@@ -55,21 +55,24 @@ no night on that side; both cases are handled in `forceIntervalToDay`. Keep thes
 ### Feature directories
 
 Code is organised per domain (`calendar/`, `date/`, `location/`, `moon/`, `header/`, `version/`, …), with files named
-`<domain>.<role>.ts(x)` (`.hooks`, `.provider`, `.utils`, `.types`, `.scss` next to its component). UI is Blueprint 6
-in dark mode (`bp6-dark` on `<body>`), styles are SCSS. Place search uses the Nominatim (OpenStreetMap) API.
+`<domain>.<role>.ts(x)` (`.hooks`, `.provider`, `.utils`, `.types`, `.scss` next to its component). UI is Material UI (MUI 9, emotion)
+in a dark theme (`src/theme/theme.ts`, based on the one in `../astroffers`: flat papers, 14px base font, small fields by
+default, `cssVariables: true`) with the same `#111418` background and `#1c2127` papers as `../astroffers`, and the app's blue-grey accents (`#111418`
+weekday and `#1c2127` weekend cells, `#30404d` hover/selected, `#0b0e11` grid lines, `#6f3434` today), styles are SCSS. `StyledEngineProvider injectFirst` (`index.tsx`) puts MUI's styles first, so
+the SCSS overrides them at the same specificity. Place search uses the Nominatim (OpenStreetMap) API.
 
 ### Conventions and decisions
 
-- The stack and structure deliberately mirror `../tinc/dashboard` (Vite, strict TS, Blueprint 6, `.oxlintrc.json`,
+- The stack and structure deliberately mirror `../tinc/dashboard` (Vite, strict TS, `.oxlintrc.json`,
   `.prettierrc`, `src/provider/*` copied from it). When in doubt, follow what tinc does.
 - No `React.memo`, and no external state library (`use.io` was removed). Prefer immutable code (`Array.from`, spread,
   early `return` per branch) over `push`/reassignment.
-- Colors: use Blueprint CSS variables (`var(--bp-palette-*)`, `var(--bp-surface-background-color-*)`), not hex values or
-  SCSS variables. The only exception is the band colors in `calendar.bands.scss` (mirrored by the legend dots in
-  `calendar.info.scss`). `theme-color` and the PWA manifest need literal hex values: keep them equal to Blueprint's dark
-  surface color (`#111418`).
-- Blueprint 6 popovers use `PopoverNext` (`Popover` is deprecated). Coordinates in the location dialog are plain
-  `InputGroup`s (`location.coordinate.tsx`), not `NumericInput`.
+- Colors: use the MUI theme CSS variables (`var(--mui-palette-*)`), not hex values or SCSS variables. The only
+  exception is the band colors in `calendar.bands.scss` (mirrored by the legend dots in `calendar.info.scss`).
+  `theme-color` and the PWA manifest need literal hex values: keep them equal to the theme's `BACKGROUND` (`#111418`).
+- The calendar day popover is an MUI `Popover` anchored to the clicked cell; place search is an `Autocomplete` with a
+  controlled `inputValue` (only `reason === 'input'` updates it, so the prefilled place name survives blur/reset).
+  Coordinates in the location dialog are plain number `TextField`s (`location.coordinate.tsx`).
 - `moment` stays (decided against replacing it).
 - The old CRA version is still live at `astro-calendar.surge.sh`; leave it untouched (no redirect or redeploy) unless asked.
   The Render URL carries a random suffix (`astro-calendar-ct40.onrender.com`), assigned because the plain name was taken.

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
-import { PopoverNext } from '@blueprintjs/core';
+import { Popover } from '@mui/material';
 import Moon from '../moon/moon';
 import Bands from './calendar.bands';
 import Info from './calendar.info';
@@ -9,41 +9,46 @@ import type { CalendarDay } from '../calculator/calculator.types';
 import './calendar.item.scss';
 
 export default function CalendarItem({ day, classNames, moonPhase, info, bands }: CalendarDay) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleOpen = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   return (
-    <PopoverNext
-      isOpen={isOpen}
-      onInteraction={setIsOpen}
-      content={<Info {...info} />}
-      hasBackdrop
-      lazy
-      renderTarget={({ isOpen: _isOpen, ref, ...targetProps }) => (
-        <div
-          {...targetProps}
-          ref={ref}
-          className={classnames(
-            'CalendarItem',
-            moment(day).isSame(moment(), 'day') && 'current',
-            classNames,
-            isOpen && 'selected'
-          )}
-        >
-          <header>
-            <div className="day">
-              <div className="day-number">{moment(day).format('D')}</div>
-              <div className="day-name">{moment(day).format('ddd')}</div>
-            </div>
-            <div className="moon-container">
-              <Moon phase={moonPhase} />
-            </div>
-          </header>
+    <>
+      <div
+        className={classnames(
+          'CalendarItem',
+          moment(day).isSame(moment(), 'day') && 'current',
+          classNames,
+          anchorEl && 'selected'
+        )}
+        onClick={handleOpen}
+      >
+        <header>
+          <div className="day">
+            <div className="day-number">{moment(day).format('D')}</div>
+            <div className="day-name">{moment(day).format('ddd')}</div>
+          </div>
+          <div className="moon-container">
+            <Moon phase={moonPhase} />
+          </div>
+        </header>
 
-          <main>
-            <Bands {...bands} />
-          </main>
-        </div>
-      )}
-    />
+        <main>
+          <Bands {...bands} />
+        </main>
+      </div>
+
+      <Popover
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Info {...info} />
+      </Popover>
+    </>
   );
 }

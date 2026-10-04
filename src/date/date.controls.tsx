@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import moment from 'moment';
-import { Button } from '@blueprintjs/core';
+import { Button } from '@mui/material';
 import { useDate, useDateSetter } from './date.hooks';
 import './date.controls.scss';
 
@@ -18,13 +18,13 @@ export default function DateControls() {
   return (
     <div className="DateControls">
       <div className="current-date">{moment(date).format('MMMM YYYY')}</div>
-      <Button onClick={handlePrevMonth} large>
+      <Button variant="outlined" color="inherit" onClick={handlePrevMonth}>
         «
       </Button>
-      <Button onClick={handleThisMonth} large>
+      <Button variant="outlined" color="inherit" onClick={handleThisMonth}>
         •
       </Button>
-      <Button onClick={handleNextMonth} large>
+      <Button variant="outlined" color="inherit" onClick={handleNextMonth}>
         »
       </Button>
     </div>
